@@ -1,36 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-
-import App from './App.tsx'
-import * as Cesium from 'cesium';
-
+import ReactDOM from 'react-dom'
 import './index.css'
-import HomePage from './HomePage.tsx';
-import Some from './some.tsx';
-Cesium.buildModuleUrl('./cesium/');
+import App from './App'
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>Hello world!</div>,
-  },
-  {
-    path: "/some",
-    element: <Some />,
-  },
-  {
-    path: "/HomePage",
-    element: <HomePage />,
-  }
-]);
-
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
 )
