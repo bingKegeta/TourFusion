@@ -1,13 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import GlobePage from './components/GlobePage'
+import { Viewer } from "cesium";
+import React, { useEffect, useRef } from "react";
+import "./App.css";
+
 
 function App() {
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (divRef.current) {
+      const map = new Viewer(divRef.current);
+      return () => map.destroy();
+    }
+  }, []);
+
   return (
-    <GlobePage />
-  )
+    <div className="App">
+      <header className="App-header">
+        <div className="cesium" ref={divRef} />
+      </header>
+    </div>
+  );
 }
 
-export default App
+export default App;
