@@ -56,8 +56,12 @@ function App() {
   // }
 
   // Get latitude and longitude
-  // NOTE: Fix this: It executes every click again every time a new click is encountered
-	const getPositionOnClick = () => {
+  // TODO: Fix this: It executes every click again every time a new click is encountered
+  // TODO: Make the name of the place more modular using cesium's reverse geocoding or something
+  //! The first click on refresh or just moving the globe is (0,0) coords - wrong
+  //* Suggestion: Add location only on double click and prompt again to be sure if user wants to add that location
+  //? Clean the code to make it more modular?
+	const getPositionOnClick = async () => {
     if (map === null)
       return;
     var viewer = map;
@@ -89,37 +93,26 @@ function App() {
     console.log(clickedPos.longitude);
     console.log(clickedPos.height);
 
-    console.log(`mutation {
-      addLocation(
-        user_id: "653bfedf1e7c5a2367365f16"
-        name: "Place SA"
-        latitude: ${clickedPos.latitude}
-        longitude: ${clickedPos.longitude}
-      )
-    }`);
+    //! Only use for testing, the error on unable to add due to same location should be handled too
+    // TODO: Convert to separate function/file for all the possible queries
+    const endpoint = 'http://localhost:5000/api';
+    const name = 'Place A';
+    const addLocationQuery = JSON.stringify({
+      query: `mutation {
+        addLocation(user_id: "6537f36acdd7568258da16d5", name: "${name}", latitude: ${clickedPos.latitude}, longitude: ${clickedPos.longitude})
+      }`
+    });
 
-    fetch('http://localhost:5000/api', {
+    const response = await fetch(endpoint, {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
-        // 'Accept': 'application/json',
-        // 'X-Api-Service-Key': '123456789077',
-        // 'Access-Control-Allow-Origin': '*',
-        // "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-        // "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With"
       },
-      body: `mutation {
-          addLocation(
-            user_id: "653bfedf1e7c5a2367365f16"
-            name: "Place SA"
-            latitude: ${clickedPos.latitude}
-            longitude: ${clickedPos.longitude}
-          )
-        }`
-      })
-      // .then((r: any) => r.json())
-      .then((data: any) => console.log('data returned:', data));
+      body: addLocationQuery,
+    });
+    const data = await response.json();
+
+    console.log(data);
   }
 
   return (
