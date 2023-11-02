@@ -1,0 +1,30 @@
+.auth-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: min-content;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    border-image: linear-gradient(to bottom, #9b59b6, #3498db);
+    border-image-slice: 1;
+    border-radius: 10px !important;
+  }
+
+.toggle-button {
+    display: inline-block;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    margin: 20px;
+    padding: 10px;
+    border: none;
+    font: normal 16px/normal "Lucida Console", Monaco, monospace;
+    color: rgba(187,154,247,1);
+    text-decoration: underline;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    background: none;
+  }
