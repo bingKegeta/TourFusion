@@ -28,3 +28,7 @@
     text-overflow: clip;
     background: none;
   }
+
+.toggle-button:hover {
+    color: #e0af68;
+}

@@ -20,7 +20,7 @@
     box-sizing: content-box;
     margin: 20px;
     padding: 10px;
-    border: 5px solid #bb9af7;
+    border: 5px solid #fff;
     -webkit-border-radius: 15px;
     border-radius: 15px;
     font: normal 16px/normal "Lucida Console", Monaco, monospace;
@@ -28,4 +28,10 @@
     -o-text-overflow: clip;
     text-overflow: clip;
     background: #24283b;
+}
+.input:hover {
+    border-color: #e0af68;
+}
+.input:focus {
+    border-color: #bb9af7;
 }
