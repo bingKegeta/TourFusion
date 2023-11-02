@@ -3,6 +3,7 @@ import '../styles/Button.css'
 
 interface ButtonProps {
     text: String,
+    type ?: String,
     size ?: 'S' | 'M' | 'L',
     onClick: () => void
 }
