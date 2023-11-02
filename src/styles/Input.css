@@ -1,3 +1,17 @@
+.input-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Style the labels */
+.label {
+    width: 50%; /* Adjust the width as needed to control the label size */
+    text-align: right;
+    margin-right: 10px; /* Adjust the spacing between label and input */
+}
+
 .input {
     display: inline-block;
     -webkit-box-sizing: content-box;
@@ -13,4 +27,4 @@
     -o-text-overflow: clip;
     text-overflow: clip;
     background: #24283b;
-  }
+}
