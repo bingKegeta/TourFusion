@@ -10,6 +10,7 @@
     width: 50%; /* Adjust the width as needed to control the label size */
     text-align: right;
     margin-right: 10px; /* Adjust the spacing between label and input */
+    margin-left: 10px;
 }
 
 .input {
