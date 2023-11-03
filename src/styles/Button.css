@@ -1,0 +1,30 @@
+/* Basic Style for a button (preferably don't change this) */
+/* TODO: Add size fixer for more modularity */
+
+.btn {
+    display: inline-block;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    cursor: pointer;
+    margin: 2%;
+    padding: 10px 20px;
+    border: 4px solid #bb9af7;
+    -webkit-border-radius: 25em;
+    border-radius: 25em;
+    font: normal 16px/21px Verdana, Geneva, sans-serif;
+    color: rgba(255,255,255,1);
+    text-align: center;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    background: #24283b;
+    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) ;
+    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) ;
+    transition: transform 0.2s;
+  }
+
+.btn:hover {
+    background-color: #414868;
+    border-color: #e0af68;
+    transform: scale(1.1);
+}
