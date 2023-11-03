@@ -1,7 +1,9 @@
-import { Viewer, ScreenSpaceEventHandler, Math as CMath, Cartesian3, Cartesian2, ScreenSpaceEventType } from "cesium";
+import { Viewer, Math as CMath, Cartesian3, Cartesian2, BingMapsGeocoderService } from "cesium";
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { CCPosition } from "./common/types";
+import { CCPosition, CCLocation } from "./common/types";
+import AuthForm from "./components/AuthForm";
+import Button from "./components/Button";
 
 function App() {
 
@@ -10,6 +12,7 @@ function App() {
   const divRef = useRef<HTMLDivElement>(null);
 
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
+  const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
 
   useEffect(() => {
     if (divRef.current) {
@@ -80,15 +83,31 @@ function App() {
       const data = await response.json();
 
     console.log(data);*/}
-    
+  }
+
+  const getLocationNameByCoordinate = async () => {
+      let baseUrl = "https://dev.virtualearth.net/REST/v1/Locations/";
+      var url = baseUrl + clickedPos?.latitude + "," + clickedPos?.longitude + "?&key=AvED6ewG8XhExam3NMbXRxqu25O7NIFZQJgFDBhlJ-WhOQzLc2cg3EKah5OoQg9n";
+      fetch(url)
+      .then(result => result.json().then(
+        res => {
+          console.log(res.resourceSets[0].resources[0].address.locality + ", " + res.resourceSets[0].resources[0].address.countryRegion);
+          setClickedLoc(
+          {
+            city: res.resourceSets[0].resources[0].address.locality,
+            country: res.resourceSets[0].resources[0].address.countryRegion
+          })
+        }
+        ));
   }
 
   return (
     <div className="App">
       <header className="App-header">
         <div className="cesium" ref={divRef} onDoubleClick = {getPositionOnClick}/>
+        {/* <AuthForm isRegister={true}/> */}
         <div className="right-container">
-          {}
+          <Button text="here" onClick={getLocationNameByCoordinate}/>
         </div>
       </header>
     </div>
