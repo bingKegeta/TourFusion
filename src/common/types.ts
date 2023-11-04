@@ -5,11 +5,11 @@ export interface CCPosition {
 }
 
 export interface CCLocation {
-    street: string;
-    city: string;
-    country: string;
-    address: string;
-    postal: string;
+    street: string|undefined;
+    city: string|undefined;
+    country: string|undefined;
+    address: string|undefined;
+    postal: string|undefined;
 }
 
 export interface TourFusionInformation {

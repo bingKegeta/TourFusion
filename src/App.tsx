@@ -10,8 +10,9 @@ function App() {
   const divRef = useRef<HTMLDivElement>(null);
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
-  const [userLocations, setUserLocations] = useState<CCLocation | null>(null);
+  const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
 
+  // Load in the Cesium Container
   useEffect(() => {
     if (divRef.current) {
       const viewerInstance = new Viewer(divRef.current);
@@ -21,22 +22,15 @@ function App() {
     }
   }, []);
 
+  // Load in the user's locations
+  useEffect(() => {
+    const getUserLocations = async () => {
+      return await queryGraphQLforUserLocations();
+    }
+    getUserLocations();
+  }, [])
+
   // Get latitude and longitude
-  // TODO: Fix this: It executes every click again every time a new click is encountered
-  // Resolution: Now the event is handled by react on a double click, as opposed to cesium's event handler
-
-
-  // TODO: Make the name of the place more modular using cesium's reverse geocoding or something
-  
-  
-  //! The first click on refresh or just moving the globe is (0,0) coords - wrong
-  // Resolution: The previous version was handling the event on cesium's event handler.
-  // While that worked, the async nature of the useState hook was causing the initial coordiante to be the default one.
-  // Now, we are passing the click event which contains the part of the screen that was clicked.
-  // Then, we are using the camera to pick the ellipsoid at that point and get the coordinates.
-  
-  //* Suggestion: Add location only on double click and prompt again to be sure if user wants to add that location
-  //? Clean the code to make it more modular?
 	const getPositionOnClick = (clicked : any) => {
 
 
@@ -83,30 +77,42 @@ function App() {
     console.log(data);*/}
   }
 
-  const getLocationNameByCoordinate = () => {
+  const getLocationNameByCoordinate = (latitude: number | undefined, longitude: number | undefined): Promise<CCLocation> => {
     let baseUrl = "https://dev.virtualearth.net/REST/v1/Locations/";
-    var url = baseUrl + clickedPos?.latitude + "," + clickedPos?.longitude + "?&key=" + import.meta.env.VITE_BING_MAPS_API_KEY;
-    fetch(url)
+    var url = baseUrl + latitude + "," + longitude + "?&key=" + import.meta.env.VITE_BING_MAPS_API_KEY;
+    let requestedNamedLocation: Promise<CCLocation> = fetch(url)
     .then(result => result.json().then(
       res => {
-        let locationInformation = res.resourceSets[0].resources[0].address;
-        console.log(locationInformation.locality + ", " + locationInformation.countryRegion);
-        setClickedLoc(
+        if (res.resourceSets[0].resources[0] !== undefined)
         {
-          street: locationInformation.addressLine,
-          city: locationInformation.locality,
-          country: locationInformation.countryRegion,
-          address: locationInformation.formattedAddress,
-          postal: locationInformation.postalCode,
+            var locationInformation = res.resourceSets[0].resources[0].address;
+            console.log(res.resourceSets[0].resources[0].address);
+            console.log(locationInformation.locality + ", " + locationInformation.countryRegion);
+            return {
+              street: locationInformation.addressLine,
+              city: locationInformation.locality,
+              country: locationInformation.countryRegion,
+              address: locationInformation.formattedAddress,
+              postal: locationInformation.postalCode,
+            }
+          } else {
+            return {
+              street: "",
+              city: "",
+              country: "",
+              address: "",
+              postal: "",
+            }
+          }
         })
-      }
-      ));
+    );
+    return requestedNamedLocation;
   }
 
   const queryGraphQLforUserLocations = async () => {
     let addLocationQuery = JSON.stringify({
       query: `query {
-        locations(user_id: "6537f36acdd7568258da16d5") {
+        locations(user_id: "653bfedf1e7c5a2367365f16") {
           name
           location {
             latitude
@@ -128,13 +134,34 @@ function App() {
       body: addLocationQuery,
     });
     let data = await response.json();
+    let returnableLocations: TourFusionLocation[] = [];
 
-    console.log(data);
+    console.log(data.data.locations);
+    let i = 0; // REMOVE THIS
+    for (let location of data.data.locations) {
+      let nameData = await getLocationNameByCoordinate(location.location.latitude, location.location.longitude);
+      returnableLocations.push({
+        name: nameData,
+        data: {
+          nameAsGivenByUser: location.name,
+          location: { latitude: location.location.latitude, longitude: location.location.longitude, height: 0.0 },
+          averageTemperature: location.avg_temp,
+          elevation: location.elevation,
+          trewarthaClassification: location.trewartha,
+          climateZone: location.climate_zone,
+        }
+      });
+      i++; // REMOVE THIS
+      if (i === 5) // REMOVE THIS
+        break; // REMOVE THIS
+    }
+    console.log(returnableLocations);
+    setUserLocations(returnableLocations);
   }
 
   const mapUserLocationsToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
       return (
-        <div key={tfc.name.address} className="user-location-container">
+        <div key={tfc.data.nameAsGivenByUser} className="user-location-container">
           <div className="user-location-container-title">
             {tfc.name.city}, {tfc.name.country}
           </div>
@@ -144,12 +171,12 @@ function App() {
 
   const mapClickedLocationToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
     return (
-      <div key={tfc.name.address} className="clicked-location-container">
+      <div key={tfc.data.nameAsGivenByUser} className="clicked-location-container">
         <div className="clicked-location-container-title">
           {tfc.name.city}, {tfc.name.country}
         </div>
         <div className="clicked-location-container-image">
-          TODO: IMAGE GO HERE {/* <Image /> */}
+          TODO: IMAGE GOES HERE {/* <Image /> */}
         </div>
         <div className="clicked-location-container-info">
           TODO: ~~~SOME DESCRIPTION HERE~~~
@@ -165,10 +192,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="cesium" ref={divRef} onClick={getPositionOnClick} onDoubleClick={getLocationNameByCoordinate}/>
+        <div className="cesium" ref={divRef} onClick={getPositionOnClick} onDoubleClick={async () => {setClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));} }/>
         {/* <AuthForm isRegister={true}/> */}
         <div className="list-container">
-          <Button text="here" onClick={getLocationNameByCoordinate}/>
+          {(userLocations as TourFusionLocation[]).map(mapUserLocationsToListBox)}
+          {/* <Button text="here" onClick={getLocationNameByCoordinate}/> */}
         </div>
       </header>
     </div>
