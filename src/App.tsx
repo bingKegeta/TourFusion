@@ -159,11 +159,27 @@ function App() {
     setUserLocations(returnableLocations);
   }
 
+  const zoomToPosition = (position: CCPosition) => {
+    map?.camera.flyTo({
+      destination: Cartesian3.fromDegrees(position.longitude, position.latitude, position.height),
+      orientation: {
+        heading: CMath.toRadians(0.0),
+        pitch: CMath.toRadians(-90.0),
+      }
+    });
+  }
+
   const mapUserLocationsToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
       return (
-        <div key={tfc.data.nameAsGivenByUser} className="user-location-container">
+        <div key={tfc.data.nameAsGivenByUser} className="user-location-container" onClick={() => zoomToPosition({latitude: tfc.data.location.latitude, longitude: tfc.data.location.longitude, height: 1000000.0})}>
           <div className="user-location-container-title">
             {tfc.data.nameAsGivenByUser}
+          </div>
+          <div className="user-location-container-details">
+            Average Temperature: {tfc.data.averageTemperature}<br/>
+            Elevation: {tfc.data.elevation}<br/>
+            Climate: {tfc.data.climateZone}<br/>
+            Trewartha Classification: {tfc.data.trewarthaClassification}<br/>
           </div>
         </div>
       );
@@ -179,11 +195,11 @@ function App() {
           TODO: IMAGE GOES HERE {/* <Image /> */}
         </div>
         <div className="clicked-location-container-info">
-          TODO: ~~~SOME DESCRIPTION HERE~~~
-          Average Temperature: {tfc.data.averageTemperature}
-          Elevation: {tfc.data.elevation}
-          Climate: {tfc.data.climateZone}
-          {tfc.data.trewarthaClassification} TODO: map to some more readable description
+          TODO: ~~~SOME DESCRIPTION HERE~~~<br/>
+          Average Temperature: {tfc.data.averageTemperature}<br/>
+          Elevation: {tfc.data.elevation}<br/>
+          Climate: {tfc.data.climateZone}<br/>
+          Trewartha Classification: {tfc.data.trewarthaClassification} TODO: map to some more readable description<br/>
         </div>
       </div>
     );
@@ -192,11 +208,30 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="cesium" ref={divRef} onClick={getPositionOnClick} onDoubleClick={async () => {setClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));} }/>
-        {/* <AuthForm isRegister={true}/> */}
+        <div className="cesium" ref={divRef} onClick={(click) => {getPositionOnClick(click); setClickedLoc(null);}} onDoubleClick={async () => {setClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));} }/>
         <div className="list-container">
-          {(userLocations as TourFusionLocation[]).map(mapUserLocationsToListBox)}
-          {/* <Button text="here" onClick={getLocationNameByCoordinate}/> */}
+          <div className={clickedLoc === null ? "all-user-locations-show" : "all-user-locations-hide"}>
+            {(userLocations as TourFusionLocation[]).map(mapUserLocationsToListBox)}
+          </div>
+          <div className={clickedLoc !== null ? "single-location-show" : "single-location-hide"}>
+            {([{
+              name: (clickedLoc !== null) ? clickedLoc : {
+                street: "",
+                city: "",
+                country: "",
+                address: "",
+                postal: "",
+              },
+              data: {
+                nameAsGivenByUser: "placeholder",
+                location: (clickedPos !== null) ? clickedPos : { latitude: 0.0, longitude: 0.0, height: 0.0 },
+                averageTemperature: 0.0,
+                elevation: 0.0,
+                trewarthaClassification: "",
+                climateZone: "",
+              }
+            }] as TourFusionLocation[]).map(mapClickedLocationToListBox)}
+          </div>
         </div>
       </header>
     </div>

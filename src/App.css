@@ -50,6 +50,7 @@ button {
 
 .list-container {
   min-width: 25%;
+  max-width: 33%;
   min-height: 100%;
   /* align-self: flex-end; */
   float: right;
@@ -85,4 +86,37 @@ button {
   border: 1px solid #050209; /* #e0af68; OR #050209; */
   text-shadow: 2px 1px 3px #10071d;
   font: normal 19px/21px Verdana, Geneva, sans-serif;
+}
+
+.user-location-container-details {
+  padding: 2% 2% 2% 2%;
+  text-align: left;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  /* -webkit-text-fill-color: #d1b8ff; */
+  text-shadow: 2px 1px 3px #10071d;
+  font: normal 14px/15px Verdana, Geneva, sans-serif;
+}
+
+.clicked-location-container {
+  transition: 0.5s;
+  overflow: hidden;
+  padding: 2% 2% 2% 2%;
+  text-align: left;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  -webkit-text-fill-color: #d1b8ff;
+  border: 1px solid #050209; /* #e0af68; OR #050209; */
+  text-shadow: 2px 1px 3px #10071d;
+  font: normal 19px/21px Verdana, Geneva, sans-serif;
+}
+
+.all-user-locations-show,.single-location-show{
+  height: 100%;
+}
+
+.all-user-locations-hide,.single-location-hide{
+  height: 0;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
 }
