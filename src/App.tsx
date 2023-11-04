@@ -6,11 +6,9 @@ import AuthForm from "./components/AuthForm";
 import Button from "./components/Button";
 
 function App() {
-
-  
+  const endpoint = 'http://localhost:5000/api';
   const [map, setMap] = useState<Viewer|null>(null);
   const divRef = useRef<HTMLDivElement>(null);
-
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
 
@@ -86,27 +84,62 @@ function App() {
   }
 
   const getLocationNameByCoordinate = async () => {
-      let baseUrl = "https://dev.virtualearth.net/REST/v1/Locations/";
-      var url = baseUrl + clickedPos?.latitude + "," + clickedPos?.longitude + "?&key=AvED6ewG8XhExam3NMbXRxqu25O7NIFZQJgFDBhlJ-WhOQzLc2cg3EKah5OoQg9n";
-      fetch(url)
-      .then(result => result.json().then(
-        res => {
-          console.log(res.resourceSets[0].resources[0].address.locality + ", " + res.resourceSets[0].resources[0].address.countryRegion);
-          setClickedLoc(
-          {
-            city: res.resourceSets[0].resources[0].address.locality,
-            country: res.resourceSets[0].resources[0].address.countryRegion
-          })
-        }
-        ));
+    let baseUrl = "https://dev.virtualearth.net/REST/v1/Locations/";
+    var url = baseUrl + clickedPos?.latitude + "," + clickedPos?.longitude + "?&key=" + import.meta.env.VITE_BING_MAPS_API_KEY;
+    fetch(url)
+    .then(result => result.json().then(
+      res => {
+        console.log(res.resourceSets[0].resources[0].address.locality + ", " + res.resourceSets[0].resources[0].address.countryRegion);
+        setClickedLoc(
+        {
+          city: res.resourceSets[0].resources[0].address.locality,
+          country: res.resourceSets[0].resources[0].address.countryRegion
+        })
+      }
+      ));
   }
+
+  const queryGraphQLforUserLocations = async () => {
+    let addLocationQuery = JSON.stringify({
+      query: `query {
+        locations(user_id: "6537f36acdd7568258da16d5") {
+          name
+          location {
+            latitude
+            longitude
+          }
+          elevation
+          avg_temp
+          trewartha
+          climate_zone
+        }
+      }`
+    });
+
+    let response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: addLocationQuery,
+    });
+    let data = await response.json();
+
+    console.log(data);
+  }
+
+  const mapUserLocationsToListBox = () => {
+    
+  }
+
+  // const mapClickedLocationToListBox
 
   return (
     <div className="App">
       <header className="App-header">
-        <div className="cesium" ref={divRef} onDoubleClick = {getPositionOnClick}/>
+        <div className="cesium" ref={divRef} onClick={getPositionOnClick} onDoubleClick={getLocationNameByCoordinate}/>
         {/* <AuthForm isRegister={true}/> */}
-        <div className="right-container">
+        <div className="list-container">
           <Button text="here" onClick={getLocationNameByCoordinate}/>
         </div>
       </header>
