@@ -163,7 +163,7 @@ function App() {
       return (
         <div key={tfc.data.nameAsGivenByUser} className="user-location-container">
           <div className="user-location-container-title">
-            {tfc.name.city}, {tfc.name.country}
+            {tfc.data.nameAsGivenByUser}
           </div>
         </div>
       );

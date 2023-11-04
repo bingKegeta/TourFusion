@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: rgb(31, 32, 45);
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -53,12 +53,36 @@ button {
   min-height: 100%;
   /* align-self: flex-end; */
   float: right;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background: #252636;
 }
 
 .user-location-container {
+  /* display: inline-block; */
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  cursor: pointer;
+  background: #24283b;
+  border: 1px solid #050209; /* #e0af68; OR #050209; */
+  /* margin-bottom: 1px; */
+  margin: 1px 5px 2px 3px;
+  min-height: 15%;
+}
 
+.user-location-container:hover {
+  background-color: #343b58;
+  transform: scale(1.0001);
 }
 
 .user-location-container-title {
-  
+  padding: 2% 2% 2% 2%;
+  text-align: left;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  -webkit-text-fill-color: #d1b8ff;
+  border: 1px solid #050209; /* #e0af68; OR #050209; */
+  text-shadow: 2px 1px 3px #10071d;
+  font: normal 19px/21px Verdana, Geneva, sans-serif;
 }
