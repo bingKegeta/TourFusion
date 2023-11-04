@@ -1,8 +1,7 @@
 import { Viewer, Math as CMath, Cartesian3, Cartesian2, BingMapsGeocoderService } from "cesium";
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { CCPosition, CCLocation } from "./common/types";
-import AuthForm from "./components/AuthForm";
+import { CCPosition, CCLocation, TourFusionLocation } from "./common/types";
 import Button from "./components/Button";
 
 function App() {
@@ -11,6 +10,7 @@ function App() {
   const divRef = useRef<HTMLDivElement>(null);
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
+  const [userLocations, setUserLocations] = useState<CCLocation | null>(null);
 
   useEffect(() => {
     if (divRef.current) {
@@ -83,17 +83,21 @@ function App() {
     console.log(data);*/}
   }
 
-  const getLocationNameByCoordinate = async () => {
+  const getLocationNameByCoordinate = () => {
     let baseUrl = "https://dev.virtualearth.net/REST/v1/Locations/";
     var url = baseUrl + clickedPos?.latitude + "," + clickedPos?.longitude + "?&key=" + import.meta.env.VITE_BING_MAPS_API_KEY;
     fetch(url)
     .then(result => result.json().then(
       res => {
-        console.log(res.resourceSets[0].resources[0].address.locality + ", " + res.resourceSets[0].resources[0].address.countryRegion);
+        let locationInformation = res.resourceSets[0].resources[0].address;
+        console.log(locationInformation.locality + ", " + locationInformation.countryRegion);
         setClickedLoc(
         {
-          city: res.resourceSets[0].resources[0].address.locality,
-          country: res.resourceSets[0].resources[0].address.countryRegion
+          street: locationInformation.addressLine,
+          city: locationInformation.locality,
+          country: locationInformation.countryRegion,
+          address: locationInformation.formattedAddress,
+          postal: locationInformation.postalCode,
         })
       }
       ));
@@ -128,11 +132,35 @@ function App() {
     console.log(data);
   }
 
-  const mapUserLocationsToListBox = () => {
-    
+  const mapUserLocationsToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
+      return (
+        <div key={tfc.name.address} className="user-location-container">
+          <div className="user-location-container-title">
+            {tfc.name.city}, {tfc.name.country}
+          </div>
+        </div>
+      );
   }
 
-  // const mapClickedLocationToListBox
+  const mapClickedLocationToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
+    return (
+      <div key={tfc.name.address} className="clicked-location-container">
+        <div className="clicked-location-container-title">
+          {tfc.name.city}, {tfc.name.country}
+        </div>
+        <div className="clicked-location-container-image">
+          TODO: IMAGE GO HERE {/* <Image /> */}
+        </div>
+        <div className="clicked-location-container-info">
+          TODO: ~~~SOME DESCRIPTION HERE~~~
+          Average Temperature: {tfc.data.averageTemperature}
+          Elevation: {tfc.data.elevation}
+          Climate: {tfc.data.climateZone}
+          {tfc.data.trewarthaClassification} TODO: map to some more readable description
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">

@@ -5,6 +5,23 @@ export interface CCPosition {
 }
 
 export interface CCLocation {
-    city: String;
-    country: String;
+    street: string;
+    city: string;
+    country: string;
+    address: string;
+    postal: string;
+}
+
+export interface TourFusionInformation {
+    nameAsGivenByUser: string;
+    location: CCPosition;
+    elevation: number;
+    averageTemperature: number;
+    trewarthaClassification: string;
+    climateZone: string;
+}
+
+export interface TourFusionLocation {
+    name: CCLocation;
+    data: TourFusionInformation;
 }
