@@ -208,8 +208,8 @@ function App() {
             Trewartha Classification: {tfc.data.trewarthaClassification}<br/>
           </div>
           <div className="user-location-container-buttons">
-            <Button text="Edit" onClick={() => console.log("TODO Edit")}/>
-            <Button text="Delete" onClick={() => console.log("TODO Delete")}/>
+            {/* <Button text="Edit" onClick={() => console.log("TODO Edit")}/>
+            <Button text="Delete" onClick={() => console.log("TODO Delete")}/> */}
           </div>
         </div>
       );

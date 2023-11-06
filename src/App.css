@@ -54,14 +54,22 @@ button {
 }
 
 .list-container {
-  position: absolute;
+  display: inline-block;
+  margin-left: 67%;
+  position: float;
   width: 33%;
   min-height: 100%;
   top: 0;
   right: 0;
   overflow-y: scroll;
   scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   background: #252636;
+}
+
+.list-container::-webkit-scrollbar {
+  display: none;
 }
 
 .all-user-locations-title,.recommended-locations-title {
@@ -83,7 +91,7 @@ button {
   background: #24283b;
   border: 1px solid #050209; /* #e0af68; OR #050209; */
   margin: 1px 5px 2px 3px;
-  height: 15%;
+  height: 10%;
 }
 
 .user-location-container:hover {
@@ -141,5 +149,5 @@ button {
 .all-user-locations-hide,.single-location-hide{
   height: 0;
   overflow: hidden;
-  transition: all 0.2s ease-out;
+  transition: all 0.1s ease-out;
 }
