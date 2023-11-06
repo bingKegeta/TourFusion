@@ -1,4 +1,4 @@
-import { Viewer, Math as CMath, Cartesian3, Cartesian2, BingMapsGeocoderService } from "cesium";
+import { Viewer, Math as CMath, Cartesian3, Cartesian2, SceneMode } from "cesium";
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { CCPosition, CCLocation, TourFusionLocation } from "./common/types";
@@ -11,11 +11,29 @@ function App() {
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
+  const [recommendedLocations, setRecommendedLocations] = useState<TourFusionLocation[]>([]);
 
   // Load in the Cesium Container
   useEffect(() => {
     if (divRef.current) {
-      const viewerInstance = new Viewer(divRef.current);
+      const viewerInstance = new Viewer(divRef.current,
+        {
+          // sceneMode: SceneMode.SCENE3D,
+          infoBox: false,
+          timeline: false,
+          animation: false,
+          homeButton: false,
+          // scene3DOnly: true,
+          // baseLayerPicker: false,
+          // sceneModePicker: false,
+          fullscreenButton: false,
+          // projectionPicker: false,
+          // selectionIndicator: false,
+          navigationHelpButton: false,
+          navigationInstructionsInitiallyVisible: false,
+        }
+      );
+      viewerInstance.resolutionScale = 1.0; // We might be able to use this?
       setMap(viewerInstance);
 
       return () => viewerInstance?.destroy();
@@ -28,6 +46,14 @@ function App() {
       return await queryGraphQLforUserLocations();
     }
     getUserLocations();
+  }, [])
+
+  // Load in the user's recommended locations
+  useEffect(() => {
+    const getRecommendedLocations = async () => {
+      return await [];
+    }
+    getRecommendedLocations();
   }, [])
 
   // Get latitude and longitude
@@ -152,7 +178,7 @@ function App() {
         }
       });
       i++; // REMOVE THIS
-      if (i === 5) // REMOVE THIS
+      if (i === 12) // REMOVE THIS
         break; // REMOVE THIS
     }
     console.log(returnableLocations);
@@ -171,7 +197,7 @@ function App() {
 
   const mapUserLocationsToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
       return (
-        <div key={tfc.data.nameAsGivenByUser} className="user-location-container" onClick={() => zoomToPosition({latitude: tfc.data.location.latitude, longitude: tfc.data.location.longitude, height: 1000000.0})}>
+        <div key={tfc.data.nameAsGivenByUser} className="user-location-container" onClick={async () => {zoomToPosition({latitude: tfc.data.location.latitude, longitude: tfc.data.location.longitude, height: 1000000.0}); setClickedLoc(await getLocationNameByCoordinate(tfc.data.location.latitude, tfc.data.location.longitude));}}>
           <div className="user-location-container-title">
             {tfc.data.nameAsGivenByUser}
           </div>
@@ -181,8 +207,28 @@ function App() {
             Climate: {tfc.data.climateZone}<br/>
             Trewartha Classification: {tfc.data.trewarthaClassification}<br/>
           </div>
+          <div className="user-location-container-buttons">
+            <Button text="Edit" onClick={() => console.log("TODO Edit")}/>
+            <Button text="Delete" onClick={() => console.log("TODO Delete")}/>
+          </div>
         </div>
       );
+  }
+
+  const mapRecommendedLocationsToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
+    return (
+      <div key={tfc.data.nameAsGivenByUser} className="user-location-container" onClick={async () => {zoomToPosition({latitude: tfc.data.location.latitude, longitude: tfc.data.location.longitude, height: 1000000.0}); setClickedLoc(await getLocationNameByCoordinate(tfc.data.location.latitude, tfc.data.location.longitude));}}>
+        <div className="user-location-container-title">
+          {tfc.data.nameAsGivenByUser}
+        </div>
+        <div className="user-location-container-details">
+          Average Temperature: {tfc.data.averageTemperature}<br/>
+          Elevation: {tfc.data.elevation}<br/>
+          Climate: {tfc.data.climateZone}<br/>
+          Trewartha Classification: {tfc.data.trewarthaClassification}<br/>
+        </div>
+      </div>
+    );
   }
 
   const mapClickedLocationToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
@@ -208,10 +254,18 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="cesium" ref={divRef} onClick={(click) => {getPositionOnClick(click); setClickedLoc(null);}} onDoubleClick={async () => {setClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));} }/>
+        {/* I know the line below looks super crazy, but it is intentional. It just zooms in to the location clicked onDoubleClick. If you are already below 1000000.0 meters, it does not change the height so that the camera movement stays smooth. */}
+        <div className="cesium" ref={divRef} onClick={(click) => {getPositionOnClick(click); setClickedLoc(null);}} onDoubleClick={async () => {(clickedPos?.latitude !== undefined && clickedPos?.longitude !== undefined && clickedPos?.height !== undefined) ? (clickedPos?.height > 1000000.0) ? zoomToPosition({latitude: clickedPos?.latitude, longitude: clickedPos?.longitude, height: 1000000.0}) : zoomToPosition({latitude: clickedPos?.latitude, longitude: clickedPos?.longitude, height: clickedPos?.height}) : {}; setClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));} }/>
         <div className="list-container">
           <div className={clickedLoc === null ? "all-user-locations-show" : "all-user-locations-hide"}>
+            <div className="all-user-locations-title">
+              Your Locations
+            </div>
             {(userLocations as TourFusionLocation[]).map(mapUserLocationsToListBox)}
+            <div className="recommended-locations-title">
+              Recommended for You
+            </div>
+            {(recommendedLocations as TourFusionLocation[]).map(mapUserLocationsToListBox)}
           </div>
           <div className={clickedLoc !== null ? "single-location-show" : "single-location-hide"}>
             {([{
