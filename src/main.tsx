@@ -2,22 +2,27 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
-import LoginRegister from './pages/LoginRegister'
+import HomePage from './pages/HomePage'
 import {
-  BrowserRouter,
-  Route,
-  Routes
-} from "react-router-dom"
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/other",
+    element: <HomePage />,
+  }
+]);
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename="/">
-      <Routes>
-      <Route path="/login" Component={LoginRegister}/>
-      <Route path="/" Component={App}/>
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>,
   document.getElementById('root')
 )
