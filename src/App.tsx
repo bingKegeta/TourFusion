@@ -207,10 +207,6 @@ function App() {
             Climate: {tfc.data.climateZone}<br/>
             Trewartha Classification: {tfc.data.trewarthaClassification}<br/>
           </div>
-          <div className="user-location-container-buttons">
-            {/* <Button text="Edit" onClick={() => console.log("TODO Edit")}/>
-            <Button text="Delete" onClick={() => console.log("TODO Delete")}/> */}
-          </div>
         </div>
       );
   }
@@ -238,7 +234,7 @@ function App() {
           {tfc.name.city}, {tfc.name.country}
         </div>
         <div className="clicked-location-container-image">
-          TODO: IMAGE GOES HERE {/* <Image /> */}
+          <img src="/src/assets/TourFusionLocationPics/shanghai.jpg" width="100%" alt=""/>
         </div>
         <div className="clicked-location-container-info">
           TODO: ~~~SOME DESCRIPTION HERE~~~<br/>
@@ -246,6 +242,10 @@ function App() {
           Elevation: {tfc.data.elevation}<br/>
           Climate: {tfc.data.climateZone}<br/>
           Trewartha Classification: {tfc.data.trewarthaClassification} TODO: map to some more readable description<br/>
+        </div>
+        <div className="clicked-location-container-buttons">
+          <Button text="Edit" onClick={() => console.log("here")}/>
+          <Button text="Remove" onClick={() => console.log("here2")}/>
         </div>
       </div>
     );
