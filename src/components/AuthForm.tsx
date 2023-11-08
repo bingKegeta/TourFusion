@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate, Navigator } from 'react-router-dom'
 import Button from './Button';
 import Input from './Input';
 import '../styles/AuthForm.css';
+
 
 type FormProps = {
   isRegister: boolean;
