@@ -5,7 +5,6 @@ import Button from "./Button";
 import ListView from "./ListView";
 
 export default function CesiumViewport({ updateStateClickedPos, updateStateClickedLoc, clickedPos } : any) {
-  const endpoint = 'http://localhost:5000/api';
   const [map, setMap] = useState<Viewer|null>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const maxHeightVal = 1000000.0;
@@ -31,13 +30,6 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
     }
   }, []);
 
-  // Load in the user's locations
-  useEffect(() => {
-    const getUserLocations = async () => {
-      return await queryGraphQLforUserLocations();
-    }
-    getUserLocations();
-  }, [])
 
   // Load in the user's recommended locations
   useEffect(() => {
@@ -127,16 +119,16 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
 
   function zoomToPosition(position: CCPosition | null){
     if (position) {
-    map?.camera.flyTo({
-      destination: Cartesian3.fromDegrees(position.longitude, 
-                                          position.latitude, 
-                                          position.height
-                                          ),
-      orientation: {
-        heading: CMath.toRadians(0.0),
-        pitch: CMath.toRadians(-90.0),
-      }
-    });
+      map?.camera.flyTo({
+        destination: Cartesian3.fromDegrees(position.longitude, 
+                                            position.latitude, 
+                                            position.height
+                                            ),
+        orientation: {
+          heading: CMath.toRadians(0.0),
+          pitch: CMath.toRadians(-90.0),
+        }
+      });
     }
   }
 
@@ -159,8 +151,8 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
   }
 
   return (
-      <div className="grid grid-cols-2">
-        <div className="z-0 fixed w-full h-full" 
+      <div className="">
+        <div className="fixed w-full h-full" 
              ref={divRef}
              onDoubleClick={handleUserClicks}
           />

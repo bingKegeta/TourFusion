@@ -12,18 +12,13 @@ export interface CCLocation {
     postal: string | undefined;
 }
 
-export interface TourFusionInformation {
-    nameAsGivenByUser: string;
+export interface TourFusionLocation {
+    name: CCLocation;
     location: CCPosition;
     elevation: number;
     averageTemperature: number;
     trewarthaClassification: string;
     climateZone: string;
-}
-
-export interface TourFusionLocation {
-    name: CCLocation;
-    data: TourFusionInformation;
 }
 
 export interface changeType {
