@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { CCPosition, CCLocation, TourFusionLocation, changeType } from "../common/types";
 import Button from "./Button";
 import ListView from "./ListView";
+import "../styles/CesiumViewport.css"
 
-export default function CesiumViewport({ updateStateClickedPos, updateStateClickedLoc, clickedPos } : any) {
-  const [map, setMap] = useState<Viewer|null>(null);
+export default function CesiumViewport({ updateStateMap, updateStateClickedPos, updateStateClickedLoc, zoomToPosition, clickedPos, clickedLoc, map } : any) {
   const divRef = useRef<HTMLDivElement>(null);
   const maxHeightVal = 1000000.0;
 
@@ -24,13 +24,13 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
         }
       );
       viewerInstance.resolutionScale = 1.0; // We might be able to use this?
-      setMap(viewerInstance);
+      updateStateMap(viewerInstance);
 
       return () => viewerInstance?.destroy();
     }
   }, []);
 
-
+  // This will be moved
   // Load in the user's recommended locations
   useEffect(() => {
     const getRecommendedLocations = async () => {
@@ -79,10 +79,9 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
         console.log("Longitude: " + valuesToPass.longitude);
         console.log("Height: " + valuesToPass.height);
 
-        updateStateClickedPos(valuesToPass)
+        updateStateClickedPos(valuesToPass);
     }
   }
-
 
   const getLocationNameByCoordinate = (latitude: number | undefined, longitude: number | undefined): Promise<CCLocation> => {
     let baseUrl = "https://dev.virtualearth.net/REST/v1/Locations/";
@@ -95,12 +94,23 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
             var locationInformation = res.resourceSets[0].resources[0].address;
             console.log(res.resourceSets[0].resources[0].address);
             console.log(locationInformation.locality + ", " + locationInformation.countryRegion);
-            return {
-              street: locationInformation.addressLine,
-              city: locationInformation.locality,
-              country: locationInformation.countryRegion,
-              address: locationInformation.formattedAddress,
-              postal: locationInformation.postalCode,
+            if (locationInformation.locality !== undefined) {
+              return {
+                street: locationInformation.addressLine,
+                city: locationInformation.locality,
+                country: locationInformation.countryRegion,
+                address: locationInformation.formattedAddress,
+                postal: locationInformation.postalCode,
+              };
+            }
+            else {
+              return {
+                street: locationInformation.addressLine,
+                city: locationInformation.adminDistrict2,
+                country: locationInformation.countryRegion,
+                address: locationInformation.formattedAddress,
+                postal: locationInformation.postalCode,
+              };
             }
           } else {
             return {
@@ -116,22 +126,6 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
     return requestedNamedLocation;
   }
 
-
-  function zoomToPosition(position: CCPosition | null){
-    if (position) {
-      map?.camera.flyTo({
-        destination: Cartesian3.fromDegrees(position.longitude, 
-                                            position.latitude, 
-                                            position.height
-                                            ),
-        orientation: {
-          heading: CMath.toRadians(0.0),
-          pitch: CMath.toRadians(-90.0),
-        }
-      });
-    }
-  }
-
   function zoomOut(position : CCPosition, height : number){
     map?.camera.flyTo({
       destination: Cartesian3.fromDegrees(position.longitude, 
@@ -145,18 +139,22 @@ export default function CesiumViewport({ updateStateClickedPos, updateStateClick
     });
   }
 
-  function handleUserClicks(e : any) {
-    getPositionOnClick(e);
-    updateStateClickedLoc(null);
-  }
+  // useEffect(() => {
+  //   console.log(clickedPos)
+  //   if (clickedPos === null) {
+  //     getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude);
+  //   }
+  // }, [clickedPos]);
+
+  // async function handleUserClicks(e : any) {
+  //   getPositionOnClick(e);
+  //   updateStateClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));
+  // }
 
   return (
-      <div className="">
-        <div className="fixed w-full h-full" 
+      <div className="cesium"
              ref={divRef}
-             onDoubleClick={handleUserClicks}
+             onDoubleClick={(e) => {if (clickedLoc === null) getPositionOnClick(e); else updateStateClickedLoc(null);}}
           />
-      </div>
-        
   );
 }

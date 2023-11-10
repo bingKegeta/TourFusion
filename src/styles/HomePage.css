@@ -1,0 +1,31 @@
+#html {
+  height: 100%;
+}
+
+.App-header {
+  background-color: rgb(31, 32, 45);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.list-container {
+  display: inline-block;
+  margin-left: 67%;
+  position: float;
+  width: 33%;
+  min-height: 100%;
+  top: 0;
+  right: 0;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background: #252636;
+}
+
+.list-container::-webkit-scrollbar {
+  display: none;
+}
