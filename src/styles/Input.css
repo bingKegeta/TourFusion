@@ -1,16 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 .input-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
+    @apply flex flex-row items-center mb-3;
 }
 
 /* Style the labels */
 .label {
-    width: 50%; /* Adjust the width as needed to control the label size */
-    text-align: right;
-    margin-right: 10px; /* Adjust the spacing between label and input */
-    margin-left: 10px;
+    @apply w-1/2 text-right mr-3 ml-3;
 }
 
 .input {
@@ -29,6 +28,7 @@
     text-overflow: clip;
     background: #24283b;
 }
+
 .input:hover {
     border-color: #e0af68;
 }

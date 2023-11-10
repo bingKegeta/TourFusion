@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate, Navigator } from 'react-router-dom'
 import Button from './Button';
 import Input from './Input';
 import '../styles/AuthForm.css';
+
 
 type FormProps = {
   isRegister: boolean;
 };
 
-const AuthForm = ({ isRegister }: FormProps) => {
+function AuthForm (isRegister : FormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -59,12 +61,16 @@ const AuthForm = ({ isRegister }: FormProps) => {
             />
           </div>
         )}
-        <Button onClick={()=> console.log(email, password)} text={isRegisterMode ? "Create Account": "Login"} type='submit' />
+        <Button onClick={() => 
+                         console.log(email, password)} 
+                         text={isRegisterMode ? "Create Account": "Login"} type='submit' />
         <div>
       </div>
       </form>
       <button
-          onClick={() => setIsRegisterMode(!isRegisterMode)}
+          onClick={() => setIsRegisterMode(previousState => {
+              return {... previousState, isRegisterMode: !previousState.isRegister}
+          })}
           className="toggle-button"
       >
           {isRegisterMode ? 'Already have an account? Click Here!' : 'Don\'t have an account yet? Click Here!'}
