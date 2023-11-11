@@ -92,8 +92,6 @@ export default function CesiumViewport({ updateStateMap, updateStateClickedPos, 
         if (res.resourceSets[0].resources[0] !== undefined)
         {
             var locationInformation = res.resourceSets[0].resources[0].address;
-            console.log(res.resourceSets[0].resources[0].address);
-            console.log(locationInformation.locality + ", " + locationInformation.countryRegion);
             if (locationInformation.locality !== undefined) {
               return {
                 street: locationInformation.addressLine,
@@ -103,10 +101,19 @@ export default function CesiumViewport({ updateStateMap, updateStateClickedPos, 
                 postal: locationInformation.postalCode,
               };
             }
-            else {
+            else if (locationInformation.adminDistrict2 !== undefined) {
               return {
                 street: locationInformation.addressLine,
                 city: locationInformation.adminDistrict2,
+                country: locationInformation.countryRegion,
+                address: locationInformation.formattedAddress,
+                postal: locationInformation.postalCode,
+              };
+            }
+            else {
+              return {
+                street: locationInformation.addressLine,
+                city: locationInformation.adminDistrict,
                 country: locationInformation.countryRegion,
                 address: locationInformation.formattedAddress,
                 postal: locationInformation.postalCode,

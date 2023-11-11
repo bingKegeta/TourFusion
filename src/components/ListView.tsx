@@ -1,13 +1,15 @@
 import React , { useEffect, useState } from "react";
 import Button from "./Button";
 import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
+import { queryGraphQL } from "../common/query";
 import LocationCard from "./LocationCard";
 import LocationDetailsPad from "./LocationDetailsPad";
 import "../styles/ListView.css"
 
-export default function ListView({updateStateClickedLoc, zoomToPosition, clickedLoc} : any) {
+export default function ListView({updateStateClickedLoc, zoomToPosition, clickedPos, clickedLoc} : any) {
     const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
     const endpoint = 'http://localhost:5000/api';
+    const user_id = "653bfedf1e7c5a2367365f16";
     const [recommendedLocations, setRecommendedLocations] = useState<TourFusionLocation[]>([]);
     
     useEffect(() => {
@@ -15,37 +17,26 @@ export default function ListView({updateStateClickedLoc, zoomToPosition, clicked
     }, [])
     
     const queryGraphQLforUserLocations = async () => {
-      let addLocationQuery = JSON.stringify({
-        query: `query {
-          locations(user_id: "653bfedf1e7c5a2367365f16") {
-            name {
-              display
-              street
-              city
-              country
-              address
-              postal
-            }
-            location {
-              latitude
-              longitude
-            }
-            elevation
-            avg_temp
-            trewartha
-            climate_zone
+      const data = await queryGraphQL(endpoint, `query {
+        locations(user_id: "${user_id}") {
+          name {
+            display
+            street
+            city
+            country
+            address
+            postal
           }
-        }`
-      });
-  
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: addLocationQuery,
-      });
-      const data = await response.json();
+          location {
+            latitude
+            longitude
+          }
+          elevation
+          avg_temp
+          trewartha
+          climate_zone
+        }
+      }`);
       const returnableLocations: TourFusionLocation[] = [];
   
       console.log(data.data.locations);
@@ -140,7 +131,7 @@ export default function ListView({updateStateClickedLoc, zoomToPosition, clicked
               </div>
             </div>
             <div className={clickedLoc !== null ? "single-location-show" : "single-location-hide"}>
-              <LocationDetailsPad clickedLoc={clickedLoc}/>
+              <LocationDetailsPad user_id={user_id} endpoint={endpoint} userLocations={userLocations} queryGraphQLforUserLocations={queryGraphQLforUserLocations} clickedPos={clickedPos} clickedLoc={clickedLoc}/>
             </div>
           </div>  
     );

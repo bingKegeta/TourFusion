@@ -52,6 +52,7 @@ export default function HomePage() {
                 <ListView className="rounded-xl"
                           zoomToPosition = {zoomToPosition}
                           updateStateClickedLoc = {updateStateClickedLoc}
+                          clickedPos={clickedPos}
                           clickedLoc={clickedLoc}
                 />
             </div>

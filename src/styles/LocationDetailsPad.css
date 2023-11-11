@@ -12,6 +12,8 @@
 
 .clicked-location-container-title {
     -webkit-text-fill-color: #d1b8ff;
+    width: 70%;
+    display: inline-block;
 }
 
 .clicked-location-container-info {
@@ -27,8 +29,9 @@
 
 .clicked-location-container-buttons {
     padding: 2% 2% 2% 2%;
-    width: 20%;
-    display: inline-block;
+    position: relative;
+    width: 30%;
+    display: inline-flex;
     text-shadow: 2px 1px 3px #10071d;
     font: normal 15px/18px Verdana, Geneva, sans-serif;
 }
