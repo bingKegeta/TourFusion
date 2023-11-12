@@ -2,8 +2,15 @@ import React , { useEffect, useState } from "react";
 import Button from "./Button";
 import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
 import "../styles/LocationDetailsPad.css"
+import DeleteLocationPrompt from "./DeleteLocationPrompt";
 
 export default function LocationDetailsPad({clickedLoc} : any) {
+
+  const [showDelete, setShowDelete] = useState(false);
+
+  const handleDelete = () => {
+    setShowDelete(true)
+  }
     
     const mapClickedLocationToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
         if (clickedLoc !== null)
@@ -26,8 +33,9 @@ export default function LocationDetailsPad({clickedLoc} : any) {
             </div>
             <div className="clicked-location-container-buttons">
               <Button text="Edit" onClick={() => console.log("here")}/>
-              <Button text="Remove" onClick={() => console.log("here2")}/>
+              <Button text="Remove" onClick={handleDelete}/>
             </div>
+            {showDelete && <DeleteLocationPrompt />}
           </div>
         );
     }
