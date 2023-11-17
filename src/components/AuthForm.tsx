@@ -7,9 +7,10 @@ import '../styles/AuthForm.css';
 
 type FormProps = {
   isRegister: boolean;
+  onClose: () => void;
 };
 
-function AuthForm (isRegister : FormProps) {
+function AuthForm ({ isRegister, onClose } : FormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,6 +30,7 @@ function AuthForm (isRegister : FormProps) {
 
   return (
     <div className='auth-form-container'>
+      <button onClick={onClose} className='close-btn'>&times;</button>
       <h2>{isRegisterMode ? 'Register' : 'Login'}</h2>
       <form onSubmit={handleSubmit} className='form-container'>
         <div className='inp-container'>
@@ -68,9 +70,7 @@ function AuthForm (isRegister : FormProps) {
       </div>
       </form>
       <button
-          onClick={() => setIsRegisterMode(previousState => {
-              return {... previousState, isRegisterMode: !previousState.isRegister}
-          })}
+          onClick={() => setIsRegisterMode((prevIsRegisterMode) => !prevIsRegisterMode)}
           className="toggle-button"
       >
           {isRegisterMode ? 'Already have an account? Click Here!' : 'Don\'t have an account yet? Click Here!'}
