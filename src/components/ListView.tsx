@@ -86,20 +86,27 @@ export default function ListView({updateStateClickedLoc, zoomToPosition, clicked
     return (
       <div className="grid z-20 bg-gray-900 text-white absolute h-full w-full md:static">
           <div className="box-border p-4 m-4">
-            <div className={clickedLoc === null ? "h-full" : "hidden transition-all ease-out"}>
-              
-              <div className="border 
-                              text-2xl 
-                              font-sans 
-                            border-gray-700 
-                              justify-center 
-                              p-2
-                            bg-gray-800
-                            text-purple-300">
-              {/* <div className="text-2xl"> */}
-                Your Locations
-              </div>
+            <div className={clickedLoc === null ? "h-full flex flex-col space-y-6" : "hidden transition-all ease-out"}>
+            <div className="border-2
+                          border-[#BB9AF7]
+                          bg-[#3A3535]
+                          rounded-2xl
+                          text-[#FCEACB]
+                          box-border
+                          ">
+            <div className="p-2
+                            grid
+                            font-sans
+                            text-[#FCEACB]
+                            ">
+              <ul className="flex flex-col text-2xl space-y-2">
+                <li className="flex justify-between pl-[10px]">
+                  <span>Your Locations</span>
+                </li>
+              </ul>
 
+            </div>
+        </div>
               <div>
                 {userLocations.map((card, i) => <LocationCard onClick = {() => {
                                                               zoomToPosition({

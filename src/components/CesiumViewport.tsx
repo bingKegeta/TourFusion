@@ -152,7 +152,7 @@ export default function CesiumViewport({ updateStateMap, updateStateClickedPos, 
   // }
 
   return (
-      <div className="w-full h-full m-0 p-0 overflow-hidden"
+      <div className="w-full h-full m-0 p-0 overflow-hidden lg:col-span-2"
              ref={divRef}
              onDoubleClick={(e) => {if (clickedLoc === null) getPositionOnClick(e); else updateStateClickedLoc(null);}}
           />

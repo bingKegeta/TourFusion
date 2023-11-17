@@ -55,7 +55,7 @@ export default function HomePage() {
     }, [zoomToPosition, updateStateClickedLoc, clickedLoc]);
 
     return (
-        <div className="grid md:grid-cols-2 h-[100svh]">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 h-[100svh]">
             <CesiumViewport updateStateMap = {updateStateMap}
                             updateStateClickedPos = {updateStateClickedPos}
                             updateStateClickedLoc = {updateStateClickedLoc}
