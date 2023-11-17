@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CCPosition, CCLocation, TourFusionLocation, changeType } from "../common/types";
 import Button from "./Button";
 import ListView from "./ListView";
-import "../styles/CesiumViewport.css"
+
 
 export default function CesiumViewport({ updateStateMap, updateStateClickedPos, updateStateClickedLoc, zoomToPosition, clickedPos, clickedLoc, map } : any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -152,7 +152,7 @@ export default function CesiumViewport({ updateStateMap, updateStateClickedPos, 
   // }
 
   return (
-      <div className="cesium"
+      <div className="w-full h-full m-0 p-0 overflow-hidden"
              ref={divRef}
              onDoubleClick={(e) => {if (clickedLoc === null) getPositionOnClick(e); else updateStateClickedLoc(null);}}
           />

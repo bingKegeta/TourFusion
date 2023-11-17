@@ -12,6 +12,13 @@
     @apply w-1/2 text-right mr-3 ml-3;
 }
 
+@media (max-width: 768px) {
+    canvas {
+        width: 100%;
+        height: auto;
+    }
+}
+
 .input {
     display: inline-block;
     -webkit-box-sizing: content-box;

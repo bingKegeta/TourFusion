@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Viewer, Cartesian3, Math as CMath } from "cesium";
 import CesiumViewport  from "../components/CesiumViewport";
 import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
 import { DebugAppearance } from "cesium";
 import ListView from "../components/ListView";
-import "../styles/HomePage.css";
+import ShowList from "../components/ShowList";
 
 export default function HomePage() {
     const [map, setMap] = useState<Viewer|null>(null);
     const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
     const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
+    const [showList, setShowList] = useState<Boolean>(true);
 
     function updateStateClickedPos(valuesToPass : CCPosition) {
         setClickedPos(valuesToPass);
@@ -21,6 +22,11 @@ export default function HomePage() {
     
     function updateStateMap(valuesToPass : Viewer) {
         setMap(valuesToPass);
+    }
+
+    function updateListState(updateState : Boolean) {
+        setShowList(updateState);
+        console.log(showList);
     }
 
     function zoomToPosition(position: CCPosition | null){
@@ -37,9 +43,19 @@ export default function HomePage() {
         });
         }
     }
-    
+
+    const memoizedListView = useMemo(() => {
+        return (
+            <ListView
+                zoomToPosition={zoomToPosition}
+                updateStateClickedLoc={updateStateClickedLoc}
+                clickedLoc={clickedLoc}
+            />
+        );
+    }, [zoomToPosition, updateStateClickedLoc, clickedLoc]);
+
     return (
-        <div className="App-header">
+        <div className="grid md:grid-cols-2 h-[100svh]">
             <CesiumViewport updateStateMap = {updateStateMap}
                             updateStateClickedPos = {updateStateClickedPos}
                             updateStateClickedLoc = {updateStateClickedLoc}
@@ -48,13 +64,10 @@ export default function HomePage() {
                             clickedLoc={clickedLoc}
                             map={map}
             />
-            <div className="list-container">
-                <ListView className="rounded-xl"
-                          zoomToPosition = {zoomToPosition}
-                          updateStateClickedLoc = {updateStateClickedLoc}
-                          clickedLoc={clickedLoc}
-                />
-            </div>
+
+            {showList ? memoizedListView : null}
+            
+            <ShowList updateListState = {updateListState}/>
         </div>
     );
 }
