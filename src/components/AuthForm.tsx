@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Navigator } from "react-router-dom";
+import { useNavigate, Navigator, BrowserRouter } from "react-router-dom";
 import Button from "./Button";
 import Input from "./Input";
 import "../styles/AuthForm.css";
@@ -18,6 +18,8 @@ function AuthForm({ isRegister, onClose }: FormProps) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegisterMode, setIsRegisterMode] = useState(isRegister);
+
+  const navigate = useNavigate();
 
   //! This isn't being recognized in the .env for some reason
   const endpoint = "http://localhost:5000/api";
@@ -38,6 +40,7 @@ function AuthForm({ isRegister, onClose }: FormProps) {
 
       try {
         await executeMutation(REGISTER, variables);
+        navigate("/dashboard");
       } catch (err) {
         console.error("Error registering user:", err);
       }
@@ -52,6 +55,7 @@ function AuthForm({ isRegister, onClose }: FormProps) {
       try {
         await executeMutation(LOGIN, variables);
         console.log("Success?");
+        navigate("/dashboard");
       } catch (err) {
         console.error("Error logging in user:", err);
       }
