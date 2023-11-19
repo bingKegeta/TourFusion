@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
-import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
-import "../styles/LocationDetailsPad.css";
+import { TourFusionLocation } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 
 export default function LocationDetailsPad({ clickedLoc }: any) {
@@ -21,9 +20,19 @@ export default function LocationDetailsPad({ clickedLoc }: any) {
     if (clickedLoc !== null) tfc.name = clickedLoc;
 
     return (
-      <div key={tfc.location.longitude} className="clicked-location-container">
-        <div className="clicked-location-container-title">
-          {tfc.name.city}, {tfc.name.country}
+      <div
+        key={tfc.location.longitude}
+        className="border-2
+      border-[#BB9AF7]
+      bg-[#3A3535]
+        rounded-2xl
+        font-sans
+        box-border
+        hover:border-[#e0af68]
+        p-2"
+      >
+        <div className="text-2xl p-2">
+          {tfc.name.display}, {tfc.name.country}
         </div>
         <div className="clicked-location-container-image">
           <img
@@ -32,7 +41,7 @@ export default function LocationDetailsPad({ clickedLoc }: any) {
             alt=""
           />
         </div>
-        <div className="clicked-location-container-info">
+        <div className="p-[2%] w-full inline-block text-left overflow-clip [text-shadow:2px_1px_3px_#10071d]">
           TODO: ~~~SOME DESCRIPTION HERE~~~
           <br />
           Average Temperature: {tfc.averageTemperature}
@@ -45,8 +54,8 @@ export default function LocationDetailsPad({ clickedLoc }: any) {
           some more readable description
           <br />
         </div>
-        <div className="clicked-location-container-buttons">
-          <Button text="Edit" onClick={() => console.log("here")} />
+        <div className="p-[2%] w-full inline-flex">
+          <Button text="&#65291;" onClick={() => console.log("here")} />
           <Button text="Remove" onClick={handleDelete} />
         </div>
         {showDelete && (
@@ -69,6 +78,7 @@ export default function LocationDetailsPad({ clickedLoc }: any) {
         [
           {
             name: {
+              display: "",
               street: "",
               city: "",
               country: "",
