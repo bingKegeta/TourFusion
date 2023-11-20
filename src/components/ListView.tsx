@@ -25,7 +25,7 @@ export default function ListView({
   const queryGraphQLforUserLocations = async () => {
     let addLocationQuery = JSON.stringify({
       query: `query {
-          locations(user_id: "6537f36acdd7568258da16d5") {
+          locations(user_id: "654b12e6265eaf51c4c29b24") {
             name {
               display
               country
@@ -121,7 +121,7 @@ export default function ListView({
               </ul>
             </div>
           </div>
-          <div>
+          <div className="space-y-4">
             {userLocations.map((card, i) => (
               <LocationCard
                 onClick={() => {

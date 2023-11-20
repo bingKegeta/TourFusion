@@ -1,6 +1,7 @@
 import { Viewer, Math as CMath, Cartesian3, Cartesian2 } from "cesium";
 import React, { useEffect, useRef } from "react";
 import { CCPosition, CCLocation } from "../common/types";
+import { populate } from "../common/addPins";
 
 export default function CesiumViewport({
   updateStateMap,
@@ -28,7 +29,7 @@ export default function CesiumViewport({
       });
       viewerInstance.resolutionScale = 1.0; // We might be able to use this?
       updateStateMap(viewerInstance);
-
+      populate(viewerInstance); // NEW, adds the pin after having the globe
       return () => viewerInstance?.destroy();
     }
   }, []);
@@ -172,6 +173,8 @@ export default function CesiumViewport({
   //   getPositionOnClick(e);
   //   updateStateClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));
   // }
+
+
 
   return (
     <div
