@@ -8,6 +8,7 @@ export default function ListView({
   updateStateClickedLoc,
   zoomToPosition,
   clickedLoc,
+  clickedPos,
 }: any) {
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -25,7 +26,7 @@ export default function ListView({
   const queryGraphQLforUserLocations = async () => {
     let addLocationQuery = JSON.stringify({
       query: `query {
-          locations(user_id: "654b12e6265eaf51c4c29b24") {
+          locations(user_id: "65586a76d592ac7d8e6d0e7f") {
             name {
               display
               country
@@ -158,7 +159,7 @@ export default function ListView({
           clickedLoc !== null ? "single-location-show" : "single-location-hide"
         }
       >
-        <LocationDetailsPad clickedLoc={clickedLoc} />
+        <LocationDetailsPad clickedLoc={clickedLoc} clickedPos={clickedPos} />
       </div>
     </div>
   );

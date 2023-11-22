@@ -2,9 +2,20 @@ import React, { useState } from "react";
 import Button from "./Button";
 import { TourFusionLocation } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
+import useMutation from "../common/useMutation";
+import { ADD_LOCATION } from "../common/mutations";
 
-export default function LocationDetailsPad({ clickedLoc }: any) {
+export default function LocationDetailsPad({ clickedLoc, clickedPos }: any) {
   const [showDelete, setShowDelete] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+
+  const handleAdd = () => {
+    setShowAdd(true);
+  };
+
+  const hanldleAddClose = () => {
+    setShowAdd(false);
+  };
 
   const handleDelete = () => {
     setShowDelete(true);
@@ -18,6 +29,31 @@ export default function LocationDetailsPad({ clickedLoc }: any) {
     tfc: TourFusionLocation
   ): React.JSX.Element => {
     if (clickedLoc !== null) tfc.name = clickedLoc;
+    if (clickedPos !== null) {
+      tfc.location = clickedPos;
+    }
+
+    const { executeMutation, loading, error } = useMutation(
+      "http://localhost:5000/api"
+    );
+
+    const handleAddConfirm = async () => {
+      const variables = {
+        //! Use Session Token Logic to get the user_id of the logged in user
+        user_id: "65586a76d592ac7d8e6d0e7f",
+        name: tfc.name,
+        //! The latitude and longitude are not set in the tfc parameter so it defaults to 0 for some reason
+        latitude: tfc.location.latitude,
+        longitude: tfc.location.longitude,
+      };
+
+      try {
+        await executeMutation(ADD_LOCATION, variables);
+        setShowAdd(false);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
     return (
       <div
@@ -55,9 +91,17 @@ export default function LocationDetailsPad({ clickedLoc }: any) {
           <br />
         </div>
         <div className="p-[2%] w-full inline-flex">
-          <Button text="&#65291;" onClick={() => console.log("here")} />
+          <Button text="&#65291;" onClick={handleAdd} />
           <Button text="Remove" onClick={handleDelete} />
         </div>
+        {showAdd && (
+          <ConfirmPopupPrompt
+            header={`Add ${tfc.name.display}?`}
+            text={`Are you sure you want to add ${tfc.name.display}, ${tfc.name.country}?`}
+            onConfirm={handleAddConfirm}
+            onClose={hanldleAddClose}
+          />
+        )}
         {showDelete && (
           <ConfirmPopupPrompt
             header="Delete Location?"
