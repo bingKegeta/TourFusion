@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 
-export default function LocationCard({ onClick, item }: any) {
+export default function LocationCard({ zoom, item }: any) {
   const [showDelete, setShowDelete] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
@@ -41,7 +41,7 @@ export default function LocationCard({ onClick, item }: any) {
                                                       p-2"
       >
         <div
-          onClick={onClick}
+          onClick={zoom}
           className="text-2xl
                             p-2"
         >
@@ -55,7 +55,7 @@ export default function LocationCard({ onClick, item }: any) {
                           text-[#FCEACB]
                             "
         >
-          <ul className="flex flex-col text-xl space-y-2 " onClick={onClick}>
+          <ul className="flex flex-col text-xl space-y-2 " onClick={zoom}>
             <li className="flex justify-between">
               <span>Average Temperature:</span>{" "}
               <span>{item.averageTemperature}</span>
