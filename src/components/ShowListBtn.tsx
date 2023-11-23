@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function ShowList({updateListState} : any) {
+export default function ShowListBtn({updateListState} : any) {
     const [showList, setShowList] = useState(true);
 
     const handleClick = () => {
