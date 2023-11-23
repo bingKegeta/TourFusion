@@ -1,33 +1,41 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import axios, { AxiosResponse } from "axios";
 
 interface QueryHookResult<T> {
-  data: T | null;
+  executeQuery: (query: string, variables?: any) => Promise<QueryResponse<T>>;
   loading: boolean;
   error: Error | null;
 }
 
-const useQuery = <T>(url: string, query: string): QueryHookResult<T> => {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+interface QueryResponse<T> {
+  data: T | null;
+  response: AxiosResponse<T> | null;
+}
+
+const useQuery = <T>(url: string): QueryHookResult<T> => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(url, { query });
-        setData(response.data.data);
-      } catch (err: any) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const executeQuery = async (
+    query: string,
+    variables?: any
+  ): Promise<QueryResponse<T>> => {
+    setLoading(true);
 
-    fetchData();
-  }, [url, query]);
+    try {
+      const response = await axios.post(url, { query: query, variables });
+      const responseData: T | null = response.data.data;
+      return { data: responseData, response };
+    } catch (err: any) {
+      console.error("Error executing query:", err);
+      setError(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return { data, loading, error };
+  return { executeQuery, loading, error };
 };
 
 export default useQuery;
