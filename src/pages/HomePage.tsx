@@ -38,7 +38,6 @@ export default function HomePage() {
 
   function updateListState(updateState: Boolean) {
     setShowList(updateState);
-    console.log(showList);
   }
 
   function zoomToPosition(position: CCPosition | null) {

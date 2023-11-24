@@ -33,36 +33,21 @@ export default function ListView({
     );
   }
 
-  if (clickedLoc) {
-    return (
-      <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
-        <AddNewLocation clickedLoc={clickedLoc}/>
-        {/*This button is in charge of destroying the NewCard view, and going back to the list by setting it to null*/}
-        <BackToList updateStateList={updateStateClickedLoc}/>
-      </div>
-    )
-  } 
 
   return (
     <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
-      <div className="box-border p-4 m-4">
-        <div>
+      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center">
           <div
             className="border-2
                           border-[#BB9AF7]
                           bg-[#3A3535]
                           rounded-2xl
                           text-[#FCEACB]
-                          box-border
+                          w-11/12
+                          sm:w-full
                           "
           >
-            <div
-              className="p-2
-                            grid
-                            font-sans
-                            text-[#FCEACB]
-                            "
-            >
+            <div className="p-2 grid font-sans text-[#FCEACB]">
               <ul className="flex flex-col text-2xl space-y-2">
                 <li className="flex justify-between pl-[10px]">
                   <span>Your Locations</span>
@@ -70,7 +55,8 @@ export default function ListView({
               </ul>
             </div>
           </div>
-          <div className="space-y-4">
+
+          <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
             {userLocations.map((card, i) => (
               <LocationCard
                 zoom={() => {
@@ -86,21 +72,27 @@ export default function ListView({
               />
             ))}
           </div>
-
           <div
-            className="border 
-                              text-2xl 
-                              font-sans 
-                              border-gray-700 
-                              justify-center 
-                              p-2
-                              bg-gray-800
-                              text-purple-300"
+            className="border-2
+                          border-[#BB9AF7]
+                          bg-[#3A3535]
+                          rounded-2xl
+                          text-[#FCEACB]
+                          w-11/12
+                          sm:w-full
+                          "
           >
-            Recommended for You
+            <div className="p-2 grid font-sans text-[#FCEACB]">
+              <ul className="flex flex-col text-2xl space-y-2">
+                <li className="flex justify-between pl-[10px]">
+                  <span>Recommended for You</span>
+                </li>
+              </ul>
+            </div>
           </div>
+
           {/*(recommendedLocations as TourFusionLocation[]).map(tfc)*/}
-        </div>
+
       </div>
     </div>
   );
