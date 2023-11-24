@@ -4,6 +4,14 @@ import { CCPosition, CCLocation } from "../common/types";
 import { populate } from "../common/addPins";
 import PopUpCard from "./PopUpCard";
 
+interface CardPropsState {
+  x: number;
+  y: number;
+  valuesCCPosition: CCPosition | null;
+  valuesCCLocation: CCLocation | null;
+  show: boolean;
+}
+
 export default function CesiumViewport({
   updateStateMap,
   updateStateClickedPos,
@@ -17,7 +25,7 @@ export default function CesiumViewport({
 }: any) {
   const divRef = useRef<HTMLDivElement>(null);
   const maxHeightVal = 1000000.0;
-  const [cardProps, setCardProps] = useState({ x: 0, y: 0, clickedPos, show: false });
+  const [cardProps, setCardProps] = useState<CardPropsState>({ x: 0, y: 0, valuesCCPosition: null, valuesCCLocation: null, show: false });
   
   // Load in the Cesium Container
   useEffect(() => {
@@ -48,8 +56,9 @@ export default function CesiumViewport({
     getRecommendedLocations();
   }, []);
 
+  // This use effect is in charge of setting the CCLocation using the values
+  // inside clickedPos. This will run when clickedPos changes..
   useEffect(() => {
-    console.log("Entered useEffect", clickedPos);
     if (clickedPos) {
       if (clickedPos.height > maxHeightVal) {
         zoomOut(clickedPos, maxHeightVal);
@@ -63,9 +72,15 @@ export default function CesiumViewport({
           clickedPos?.longitude
         );
         updateStateClickedLoc(value);
+        setCardProps(prev => ({
+          ...prev,
+          valuesCCLocation: value,
+        }));
       };
       fetchInformation();
     }
+    console.log("ClickedPos", clickedPos);
+
   }, [clickedPos]);
 
   function getCenterOfViewport(viewer: Viewer): Cartesian3 | null {
@@ -86,10 +101,11 @@ export default function CesiumViewport({
     return { x: screenSpace.x, y: screenSpace.y };
   }
   
-
-  // Get latitude and longitude
+  // Get latitude and longitude, this will be in charge of setting the values 
+  // inside clickedPos, as well as the CardProps..
   const getPositionOnClick = (clicked: any) => {
-
+    let valuesToPass : CCPosition;
+    
     if (map === null) return;
 
     const viewer = map;
@@ -103,7 +119,7 @@ export default function CesiumViewport({
     );
     if (cartesian) {
       let cartographic = ellipsoid.cartesianToCartographic(cartesian);
-      const valuesToPass: CCPosition = {
+      valuesToPass = {
         longitude: CMath.toDegrees(cartographic.longitude),
         latitude: CMath.toDegrees(cartographic.latitude),
         height: Math.ceil(viewer.camera.positionCartographic.height),
@@ -119,10 +135,14 @@ export default function CesiumViewport({
       
       if (centerPosition) {
         const fixedCenterPosition = convertToScreenSpace(map, centerPosition);
-        console.log("THIS IS THE CENTER", fixedCenterPosition);
         if (fixedCenterPosition){
-          console.log(clickedPos); // THIS IS NULL
-          setCardProps({ x: fixedCenterPosition.x, y: fixedCenterPosition.y, clickedPos, show: true });
+          setCardProps(prev => ({
+            ...prev,
+            x: fixedCenterPosition.x, 
+            y: fixedCenterPosition.y, 
+            valuesCCPosition: valuesToPass, 
+            show: true,
+          }));
         }
       }
 
@@ -223,7 +243,7 @@ export default function CesiumViewport({
           getPositionOnClick(e);
         }}
       />
-      {cardProps.show && <PopUpCard x={cardProps.x} y={cardProps.y} clickedPos={cardProps.clickedPos} />}
+      {cardProps.show && <PopUpCard x={cardProps.x} y={cardProps.y} clickedPos={cardProps.valuesCCPosition} clickedLoc={cardProps.valuesCCLocation}/>}
     </>
   );
 }
