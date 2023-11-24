@@ -4,17 +4,22 @@ import CesiumViewport from "../components/CesiumViewport";
 import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
 import ListView from "../components/ListView";
 import ShowListBtn from "../components/ShowListBtn";
+import useQuery from "../common/useQuery";
+import { ALL_LOCATIONS } from "../common/queries";
 
 export default function HomePage() {
   const [map, setMap] = useState<Viewer | null>(null);
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null); // FIX THiS !!!!!!
-  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(null);
+  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(
+    null
+  );
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [showList, setShowList] = useState<Boolean>(true);
   const endpoint = "http://localhost:5000/api";
-  
+
+  const { executeQuery, loading, error } = useQuery(endpoint);
+
   function updateStateClickedPos(valuesToPass: CCPosition) {
     setClickedPos(valuesToPass);
   }
@@ -53,71 +58,52 @@ export default function HomePage() {
   }
 
   const queryGraphQLforUserLocations = async () => {
-    let addLocationQuery = JSON.stringify({
-      query: `query {
-          locations(user_id: "654b12e6265eaf51c4c29b24") {
-            name {
-              display
-              country
-            }
-            location {
-              latitude
-              longitude
-            }
-            elevation
-            avg_temp
-            trewartha
-            climate_zone
-          }
-        }`,
-    });
+    const variables = {
+      //! Add Session Token or OAuth logic
+      user_id: "65586a76d592ac7d8e6d0e7f",
+    };
 
-    const fetchData = fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: addLocationQuery,
-    });
+    try {
+      const { data, response } = await executeQuery(ALL_LOCATIONS, variables);
 
-    fetchData
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const returnableLocations: TourFusionLocation[] = [];
-        for (let location of data.data.locations) {
-          {
-            /*let nameData = await getLocationNameByCoordinate(
-                                  location.location.latitude, 
-              location.location.longitude);*/
-          }
-          returnableLocations.push({
-            name: location.name,
-            location: {
-              latitude: location.location.latitude,
-              longitude: location.location.longitude,
-              height: 0.0,
-            },
-            averageTemperature: location.avg_temp,
-            elevation: location.elevation,
-            trewarthaClassification: location.trewartha,
-            climateZone: location.climate_zone,
-          });
-        }
-        console.log("Fetched");
-        console.log(returnableLocations);
-        setUserLocations(returnableLocations);
-        setIsLoading(false);
-      });
+      if (!data) {
+        console.error("Data or locations not available:", data);
+        return;
+      }
+
+      const returnableLocations: TourFusionLocation[] = [];
+
+      for (let location of data.locations) {
+        /*let nameData = await getLocationNameByCoordinate(
+          location.location.latitude, 
+          location.location.longitude
+        );*/
+
+        returnableLocations.push({
+          name: location.name,
+          location: {
+            latitude: location.location.latitude,
+            longitude: location.location.longitude,
+            height: 0.0,
+          },
+          averageTemperature: location.avg_temp,
+          elevation: location.elevation,
+          trewarthaClassification: location.trewartha,
+          climateZone: location.climate_zone,
+        });
+      }
+
+      console.log(returnableLocations);
+      setUserLocations([...returnableLocations]);
+      console.log(userLocations);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
     queryGraphQLforUserLocations();
-  },[])
+  }, []);
 
   const memoizedListView = useMemo(() => {
     return (
@@ -131,7 +117,13 @@ export default function HomePage() {
         updateStateClickedLoc={updateStateClickedLoc}
       />
     );
-  }, [zoomToPosition, updateStateClickedCard, updateStateClickedLoc, clickedCard, clickedLoc]);
+  }, [
+    zoomToPosition,
+    updateStateClickedCard,
+    updateStateClickedLoc,
+    clickedCard,
+    clickedLoc,
+  ]);
 
   const memoizedCesiumViewport = useMemo(() => {
     return (
@@ -151,9 +143,9 @@ export default function HomePage() {
 
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 h-[100svh]">
-      {userLocations && !isLoading ? memoizedCesiumViewport : null}
+      {userLocations && !loading ? memoizedCesiumViewport : null}
 
-      {showList && !isLoading ? memoizedListView : null}
+      {showList && !loading ? memoizedListView : null}
 
       <ShowListBtn updateListState={updateListState} />
     </div>

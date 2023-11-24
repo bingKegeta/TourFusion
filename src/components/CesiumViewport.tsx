@@ -1,4 +1,10 @@
-import { Viewer, Math as CMath, Cartesian3, Cartesian2, SceneTransforms } from "cesium";
+import {
+  Viewer,
+  Math as CMath,
+  Cartesian3,
+  Cartesian2,
+  SceneTransforms,
+} from "cesium";
 import React, { useEffect, useRef, useState } from "react";
 import { CCPosition, CCLocation } from "../common/types";
 import { populate } from "../common/addPins";
@@ -17,8 +23,13 @@ export default function CesiumViewport({
 }: any) {
   const divRef = useRef<HTMLDivElement>(null);
   const maxHeightVal = 1000000.0;
-  const [cardProps, setCardProps] = useState({ x: 0, y: 0, clickedPos, show: false });
-  
+  const [cardProps, setCardProps] = useState({
+    x: 0,
+    y: 0,
+    clickedPos,
+    show: false,
+  });
+
   // Load in the Cesium Container
   useEffect(() => {
     if (divRef.current) {
@@ -33,11 +44,14 @@ export default function CesiumViewport({
       });
       viewerInstance.resolutionScale = 1.0; // We might be able to use this?
       updateStateMap(viewerInstance);
-      console.log("Printing userLocations inside CesiumViewport", userLocations)
+      console.log(
+        "Printing userLocations inside CesiumViewport",
+        userLocations
+      );
       populate(viewerInstance, userLocations); // NEW, adds the pin after having the globe
       return () => viewerInstance?.destroy();
     }
-  }, []);
+  }, [userLocations.length]);
 
   // This will be moved
   // Load in the user's recommended locations
@@ -70,26 +84,35 @@ export default function CesiumViewport({
 
   function getCenterOfViewport(viewer: Viewer): Cartesian3 | null {
     const canvas = viewer.scene.canvas;
-    const center = new Cartesian2(canvas.clientWidth / 2, canvas.clientHeight / 2);
-    const returnCoordinates = viewer.camera.pickEllipsoid(center, viewer.scene.globe.ellipsoid);
-    
+    const center = new Cartesian2(
+      canvas.clientWidth / 2,
+      canvas.clientHeight / 2
+    );
+    const returnCoordinates = viewer.camera.pickEllipsoid(
+      center,
+      viewer.scene.globe.ellipsoid
+    );
+
     if (returnCoordinates) {
-      return returnCoordinates
-    }
-    else {
+      return returnCoordinates;
+    } else {
       return null;
     }
   }
 
-  function convertToScreenSpace(viewer: Viewer, cartesian: Cartesian3): { x: number, y: number } {
-    const screenSpace = SceneTransforms.wgs84ToWindowCoordinates(viewer.scene, cartesian);
+  function convertToScreenSpace(
+    viewer: Viewer,
+    cartesian: Cartesian3
+  ): { x: number; y: number } {
+    const screenSpace = SceneTransforms.wgs84ToWindowCoordinates(
+      viewer.scene,
+      cartesian
+    );
     return { x: screenSpace.x, y: screenSpace.y };
   }
-  
 
   // Get latitude and longitude
   const getPositionOnClick = (clicked: any) => {
-
     if (map === null) return;
 
     const viewer = map;
@@ -115,17 +138,21 @@ export default function CesiumViewport({
 
       updateStateClickedPos(valuesToPass);
 
-      const centerPosition : Cartesian3 | null  = getCenterOfViewport(map);
-      
+      const centerPosition: Cartesian3 | null = getCenterOfViewport(map);
+
       if (centerPosition) {
         const fixedCenterPosition = convertToScreenSpace(map, centerPosition);
         console.log("THIS IS THE CENTER", fixedCenterPosition);
-        if (fixedCenterPosition){
+        if (fixedCenterPosition) {
           console.log(clickedPos); // THIS IS NULL
-          setCardProps({ x: fixedCenterPosition.x, y: fixedCenterPosition.y, clickedPos, show: true });
+          setCardProps({
+            x: fixedCenterPosition.x,
+            y: fixedCenterPosition.y,
+            clickedPos,
+            show: true,
+          });
         }
       }
-
     }
   };
 
@@ -212,18 +239,23 @@ export default function CesiumViewport({
   //   updateStateClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));
   // }
 
-
   return (
     <>
       <div
         className="w-full h-full m-0 p-0 overflow-hidden lg:col-span-2"
         ref={divRef}
         onDoubleClick={(e) => {
-          updateStateClickedCard(null)
+          updateStateClickedCard(null);
           getPositionOnClick(e);
         }}
       />
-      {cardProps.show && <PopUpCard x={cardProps.x} y={cardProps.y} clickedPos={cardProps.clickedPos} />}
+      {cardProps.show && (
+        <PopUpCard
+          x={cardProps.x}
+          y={cardProps.y}
+          clickedPos={cardProps.clickedPos}
+        />
+      )}
     </>
   );
 }
