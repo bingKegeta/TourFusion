@@ -26,3 +26,14 @@ export interface changeType {
   onUpdateClickedPos: (value: CCPosition) => void;
   onUpdateClickedLoc: (value: CCLocation) => void;
 }
+
+export interface RecommendLocation {
+  rank: number;
+  location: CCPosition;
+  city: string;
+  country: string;
+  elevation: number;
+  avg_temp: number;
+  trewartha: string;
+  climate_zone: string;
+}

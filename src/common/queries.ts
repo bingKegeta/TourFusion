@@ -15,3 +15,19 @@ export const ALL_LOCATIONS = `query Locations($user_id: String!) {
       climate_zone
     }
   }`;
+
+export const RECOMMENDED_LOCATIONS = `query stuff($user_id: String!, $num_recommendations: Int) {
+  recommendedLocations(user_id: $user_id, num_recommendations: $num_recommendations) {
+    rank
+    location {
+      latitude
+      longitude
+    }
+    city
+    country
+    elevation
+    avg_temp
+    trewartha
+    climate_zone
+  }
+}`;

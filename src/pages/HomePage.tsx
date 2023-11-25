@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Viewer, Cartesian3, Math as CMath } from "cesium";
 import CesiumViewport from "../components/CesiumViewport";
-import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
+import {
+  CCPosition,
+  CCLocation,
+  TourFusionLocation,
+  RecommendLocation,
+} from "../common/types";
 import ListView from "../components/ListView";
 import ShowListBtn from "../components/ShowListBtn";
 import useQuery from "../common/useQuery";
-import { ALL_LOCATIONS } from "../common/queries";
+import { ALL_LOCATIONS, RECOMMENDED_LOCATIONS } from "../common/queries";
 
 export default function HomePage() {
   const [map, setMap] = useState<Viewer | null>(null);
@@ -15,6 +20,9 @@ export default function HomePage() {
     null
   );
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
+  const [recommendedLocations, setRecommendedLocations] = useState<
+    RecommendLocation[]
+  >([]);
   const [showList, setShowList] = useState<Boolean>(true);
   const endpoint = "http://localhost:5000/api";
 
@@ -73,11 +81,6 @@ export default function HomePage() {
       const returnableLocations: TourFusionLocation[] = [];
 
       for (let location of data.locations) {
-        /*let nameData = await getLocationNameByCoordinate(
-          location.location.latitude, 
-          location.location.longitude
-        );*/
-
         returnableLocations.push({
           name: location.name,
           location: {
@@ -100,8 +103,55 @@ export default function HomePage() {
     }
   };
 
+  const queryGraphQLforRecommendedLocations = async () => {
+    const variables = {
+      //! Add Session Token or OAuth logic
+      user_id: "65586a76d592ac7d8e6d0e7f",
+      num_recommendations: 5,
+    };
+
+    try {
+      const { data, response } = await executeQuery(
+        RECOMMENDED_LOCATIONS,
+        variables
+      );
+
+      if (!data || !data.recommendedLocations) {
+        console.error("Data or locations not available:", data);
+        return;
+      }
+
+      console.log("data: ", data);
+
+      const recLocations: RecommendLocation[] = [];
+
+      for (let recs of data.recommendedLocations) {
+        recLocations.push({
+          rank: recs.rank,
+          location: {
+            latitude: recs.latitude,
+            longitude: recs.longitude,
+            height: 0,
+          },
+          city: recs.city,
+          country: recs.country,
+          elevation: recs.elevation,
+          avg_temp: recs.avg_temp,
+          trewartha: recs.trewartha,
+          climate_zone: recs.climate_zone,
+        });
+      }
+
+      console.log("Recommended locations for the user:", recLocations);
+      setRecommendedLocations([...recLocations]);
+    } catch (err) {
+      console.error("Problem with the data", err);
+    }
+  };
+
   useEffect(() => {
     queryGraphQLforUserLocations();
+    queryGraphQLforRecommendedLocations();
   }, []);
 
   const memoizedListView = useMemo(() => {
@@ -113,6 +163,7 @@ export default function HomePage() {
         clickedPos={clickedPos}
         clickedLoc={clickedLoc}
         userLocations={userLocations}
+        recommendedLocations={recommendedLocations}
         updateStateClickedLoc={updateStateClickedLoc}
       />
     );

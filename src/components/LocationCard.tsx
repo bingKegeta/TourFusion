@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 
-export default function LocationCard({ zoom, item }: any) {
+export default function LocationCard({ zoom, item, isRecommend }: any) {
   const [showDelete, setShowDelete] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
@@ -25,7 +25,7 @@ export default function LocationCard({ zoom, item }: any) {
   return (
     <>
       <div
-        key={item.location.longitude}
+        key={!isRecommend ? item.location.longitude : item.rank}
         className="border-2
                                                     border-[#BB9AF7]
                                                     bg-[#3A3535]
@@ -45,7 +45,8 @@ export default function LocationCard({ zoom, item }: any) {
           className="text-2xl
                             p-2"
         >
-          {item.name.display}, {item.name.country}
+          {!isRecommend ? item.name.display : item.city},{" "}
+          {!isRecommend ? item.name.country : item.country}
         </div>
         <div
           className="p-2
@@ -58,17 +59,22 @@ export default function LocationCard({ zoom, item }: any) {
           <ul className="flex flex-col text-xl space-y-2 " onClick={zoom}>
             <li className="flex justify-between">
               <span>Average Temperature:</span>{" "}
-              <span>{item.averageTemperature}</span>
+              <span>
+                {!isRecommend ? item.averageTemperature : item.avg_temp}
+              </span>
             </li>
             <li className="flex justify-between">
               <span>Elevation:</span> <span>{item.elevation}</span>
             </li>
             <li className="flex justify-between">
-              <span>Climate:</span> <span>{item.climateZone}</span>
+              <span>Climate:</span>{" "}
+              <span>{!isRecommend ? item.climateZone : item.climate_zone}</span>
             </li>
             <li className="flex justify-between">
               <span>Trewartha Classification:</span>{" "}
-              <span>{item.trewarthaClassification}</span>
+              <span>
+                {!isRecommend ? item.trewarthaClassification : item.trewartha}
+              </span>
             </li>
           </ul>
 
