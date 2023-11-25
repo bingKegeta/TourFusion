@@ -28,6 +28,7 @@ export default function CesiumViewport({
   clickedLoc,
   map,
   userLocations,
+  recommendedLocations,
 }: any) {
   const divRef = useRef<HTMLDivElement>(null);
   const maxHeightVal = 1000000.0;
@@ -57,10 +58,10 @@ export default function CesiumViewport({
         "Printing userLocations inside CesiumViewport",
         userLocations
       );
-      populate(viewerInstance, userLocations); // NEW, adds the pin after having the globe
+      populate(viewerInstance, userLocations, recommendedLocations); // NEW, adds the pin after having the globe
       return () => viewerInstance?.destroy();
     }
-  }, [userLocations.length]);
+  }, [userLocations.length, recommendedLocations.length]);
 
   // This will be moved
   // Load in the user's recommended locations

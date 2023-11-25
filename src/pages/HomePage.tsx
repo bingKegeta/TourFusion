@@ -187,9 +187,10 @@ export default function HomePage() {
         clickedLoc={clickedLoc}
         map={map}
         userLocations={userLocations}
+        recommendedLocations={recommendedLocations}
       />
     );
-  }, [userLocations, map, clickedPos]);
+  }, [userLocations, map, clickedPos, recommendedLocations]);
 
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 h-[100svh]">
