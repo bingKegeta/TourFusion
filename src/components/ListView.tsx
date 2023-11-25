@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Button from "./Button";
-import { TourFusionLocation } from "../common/types";
 import LocationCard from "./LocationCard";
 import LocationDetailsPad from "./LocationDetailsPad";
-import { BooleanValueNode } from "graphql";
 import BackToList from "./GoBackToList";
 import AddNewLocation from "./AddNewLocation";
 

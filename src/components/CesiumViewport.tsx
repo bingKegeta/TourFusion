@@ -63,15 +63,6 @@ export default function CesiumViewport({
     }
   }, [userLocations.length, recommendedLocations.length]);
 
-  // This will be moved
-  // Load in the user's recommended locations
-  useEffect(() => {
-    const getRecommendedLocations = async () => {
-      return await [];
-    };
-    getRecommendedLocations();
-  }, []);
-
   // This use effect is in charge of setting the CCLocation using the values
   // inside clickedPos. This will run when clickedPos changes..
   useEffect(() => {
@@ -244,18 +235,6 @@ export default function CesiumViewport({
       },
     });
   }
-
-  // useEffect(() => {
-  //   console.log(clickedPos)
-  //   if (clickedPos === null) {
-  //     getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude);
-  //   }
-  // }, [clickedPos]);
-
-  // async function handleUserClicks(e : any) {
-  //   getPositionOnClick(e);
-  //   updateStateClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));
-  // }
 
   return (
     <>

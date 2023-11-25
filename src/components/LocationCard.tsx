@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 
 export default function LocationCard({ zoom, item, isRecommend }: any) {
