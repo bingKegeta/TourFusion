@@ -13,3 +13,7 @@ export const LOGIN = `mutation Login($emailorusername: String!, $password: Strin
 export const ADD_LOCATION = `mutation AddLocation($user_id: String!, $name: LocationNameInput!, $latitude: Float!, $longitude: Float!) {
   addLocation(user_id: $user_id, name: $name, latitude: $latitude, longitude: $longitude)
 }`;
+
+export const DELETE_LOCATION = `mutation delete($id: String!) {
+  deleteLocation(_id: $id)
+}`;

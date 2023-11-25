@@ -14,6 +14,7 @@ export interface CCLocation {
 }
 
 export interface TourFusionLocation {
+  id: string;
   name: CCLocation;
   location: CCPosition;
   elevation: number;

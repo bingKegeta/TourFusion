@@ -1,24 +1,45 @@
 import React, { useEffect, useState } from "react";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
+import useMutation from "../common/useMutation";
+import { DELETE_LOCATION } from "../common/mutations";
 
-export default function LocationCard({ zoom, item, isRecommend }: any) {
-  const [showDelete, setShowDelete] = useState(false);
-  const [showAdd, setShowAdd] = useState(false);
+interface LocationCardProps {
+  zoom: () => void;
+  isRecommend: Boolean;
+  item: any; //? Putting TourFusionLocation | RecommendLocation keeps throwing weird errors
+}
+
+export default function LocationCard({
+  zoom,
+  item,
+  isRecommend,
+}: LocationCardProps) {
+  const endpoint = "http://localhost:5000/api";
+  const { executeMutation, loading, error } = useMutation(endpoint);
+
+  const [showDelete, setShowDelete] = useState<Boolean>(false);
+  const [showEdit, setShowEdit] = useState<Boolean>(false);
 
   const handleDelete = () => {
-    setShowDelete(true);
+    setShowDelete(!showDelete);
   };
 
-  const handleAdd = () => {
-    setShowAdd(true);
+  const handleEdit = () => {
+    setShowEdit(!showEdit);
   };
 
-  const handleCloseDelete = () => {
-    setShowDelete(false);
-  };
+  const handleDeleteLocation = async () => {
+    const variables = {
+      id: item.id,
+    };
 
-  const handleCloseAdd = () => {
-    setShowAdd(false);
+    try {
+      await executeMutation(DELETE_LOCATION, variables);
+      handleDelete();
+      //! Add component reload here
+    } catch (err) {
+      console.error("Error deleting the entry: ", err);
+    }
   };
 
   return (
@@ -88,10 +109,11 @@ export default function LocationCard({ zoom, item, isRecommend }: any) {
                                      hover:bg-[#414868]
                                      hover:border-[#e0af68]"
             >
-              &#9998;
+              {!isRecommend ? <>&#9998;</> : <>&#65291;</>}
             </button>
-            <button
-              className="bg-[#111827] 
+            {!isRecommend && (
+              <button
+                className="bg-[#111827] 
                       border-2 
                       border-[#BB9AF7] 
                       rounded-[30px] 
@@ -100,10 +122,11 @@ export default function LocationCard({ zoom, item, isRecommend }: any) {
                       h-[40px]
                       hover:bg-[#414868]
                       hover:border-[#f7768e]"
-              onClick={handleDelete}
-            >
-              &#128465;
-            </button>
+                onClick={handleDelete}
+              >
+                &#128465;
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -111,8 +134,8 @@ export default function LocationCard({ zoom, item, isRecommend }: any) {
         <ConfirmPopupPrompt
           header="Delete Location?"
           text="Are you sure you want to delete this location?"
-          onConfirm={() => console.log("Yes Clicked!")}
-          onClose={handleCloseDelete}
+          onConfirm={handleDeleteLocation}
+          onClose={handleDelete}
         />
       )}
     </>

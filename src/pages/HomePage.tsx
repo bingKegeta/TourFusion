@@ -82,6 +82,7 @@ export default function HomePage() {
 
       for (let location of data.locations) {
         returnableLocations.push({
+          id: location._id,
           name: location.name,
           location: {
             latitude: location.location.latitude,
