@@ -25,7 +25,6 @@ export default function LocationCard({ zoom, item, isRecommend }: any) {
   return (
     <>
       <div
-        key={!isRecommend ? item.location.longitude : item.rank}
         className="border-2
                                                     border-[#BB9AF7]
                                                     bg-[#3A3535]

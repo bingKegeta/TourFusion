@@ -129,8 +129,8 @@ export default function HomePage() {
         recLocations.push({
           rank: recs.rank,
           location: {
-            latitude: recs.latitude,
-            longitude: recs.longitude,
+            latitude: recs.location.latitude,
+            longitude: recs.location.longitude,
             height: 0,
           },
           city: recs.city,

@@ -88,26 +88,21 @@ export default function ListView({
         </div>
 
         <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
-          {recommendedLocations.map(
-            (
-              card: { location: { latitude: number; longitude: number } },
-              j: number
-            ) => (
-              <LocationCard
-                zoom={() => {
-                  zoomToPosition({
-                    latitude: card.location.latitude,
-                    longitude: card.location.longitude,
-                    height: maxHeight,
-                  });
-                  updateStateClickedCard(card);
-                }}
-                item={card}
-                isRecommend={true}
-                key={j}
-              />
-            )
-          )}
+          {recommendedLocations.map((rec, j) => (
+            <LocationCard
+              zoom={() => {
+                zoomToPosition({
+                  latitude: rec.location.latitude,
+                  longitude: rec.location.longitude,
+                  height: maxHeight,
+                });
+                updateStateClickedCard(rec);
+              }}
+              item={rec}
+              isRecommend={true}
+              key={j}
+            />
+          ))}
         </div>
       </div>
     </div>
