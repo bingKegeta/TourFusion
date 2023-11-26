@@ -4,7 +4,7 @@ import { CCLocation, CCPosition } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
 import { ADD_LOCATION } from "../common/mutations";
-import { round } from "../common/extras";
+import { getSessionToken, round } from "../common/extras";
 
 interface CardProps {
   x: number;
@@ -37,7 +37,7 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
   const handleAddLocation = async () => {
     const variables = {
       //! Add session token logic to get this
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: getSessionToken(),
       name: clickedLoc,
       latitude: clickedPos?.latitude,
       longitude: clickedPos?.longitude,
@@ -73,13 +73,17 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
           <span className="flex justify-between">
             <span>Latitude:</span>
             <span>
-              {clickedPos ? round(clickedPos.latitude, 7) : "Error getting latitude"}
+              {clickedPos
+                ? round(clickedPos.latitude, 7)
+                : "Error getting latitude"}
             </span>
           </span>
           <span className="flex justify-between">
             <span>Longitude:</span>
             <span>
-              {clickedPos ? round(clickedPos.longitude, 7) : "Error getting longitude"}
+              {clickedPos
+                ? round(clickedPos.longitude, 7)
+                : "Error getting longitude"}
             </span>
           </span>
         </div>

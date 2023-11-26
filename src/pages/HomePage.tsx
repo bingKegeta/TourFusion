@@ -11,14 +11,19 @@ import ListView from "../components/ListView";
 import ShowListBtn from "../components/ShowListBtn";
 import useQuery from "../common/useQuery";
 import { ALL_LOCATIONS, RECOMMENDED_LOCATIONS } from "../common/queries";
+import { getSessionToken } from "../common/extras";
 
 export default function HomePage() {
   const [map, setMap] = useState<Viewer | null>(null);
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null); // FIX THiS !!!!!!
-  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(null);
+  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(
+    null
+  );
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
-  const [recommendedLocations, setRecommendedLocations] = useState<RecommendLocation[]>([]);
+  const [recommendedLocations, setRecommendedLocations] = useState<
+    RecommendLocation[]
+  >([]);
   const [locationsChanged, setLocationsChanged] = useState<Boolean>(false);
   const [showList, setShowList] = useState<Boolean>(true);
   const endpoint = "http://localhost:5000/api";
@@ -41,7 +46,7 @@ export default function HomePage() {
     setMap(valuesToPass);
   }
 
-  function setReload(value : Boolean) {
+  function setReload(value: Boolean) {
     setLocationsChanged(true);
     setLocationsChanged(false);
   }
@@ -68,7 +73,7 @@ export default function HomePage() {
   const queryGraphQLforUserLocations = async () => {
     const variables = {
       //! Add Session Token or OAuth logic
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: getSessionToken(),
     };
 
     try {
@@ -108,7 +113,7 @@ export default function HomePage() {
   const queryGraphQLforRecommendedLocations = async () => {
     const variables = {
       //! Add Session Token or OAuth logic
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: getSessionToken(),
       num_recommendations: 5,
     };
 

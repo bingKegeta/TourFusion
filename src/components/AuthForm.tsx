@@ -55,8 +55,15 @@ function AuthForm({ isRegister, onClose }: FormProps) {
       };
 
       try {
-        await executeMutation(LOGIN, variables);
-        console.log("Success?");
+        const response = await executeMutation(LOGIN, variables);
+
+        // if code reaches here, login was successful
+        const user_id = response.login;
+        console.log(user_id);
+
+        document.cookie = `session_token=${user_id}; path=/;`;
+
+        // go to the dashboard
         navigate("/dashboard");
       } catch (err) {
         console.error("Error logging in user:", err);

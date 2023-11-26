@@ -4,6 +4,7 @@ import useMutation from "../common/useMutation";
 import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { RecommendLocation, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
+import { getSessionToken } from "../common/extras";
 
 interface LocationCardProps {
   zoom: () => void;
@@ -57,7 +58,7 @@ export default function LocationCard({
 
   const handleAddLocation = async () => {
     const variables = {
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: getSessionToken(),
       name: {
         display: item.city,
         country: item.country,
