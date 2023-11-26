@@ -33,3 +33,33 @@ export function RecommendLocationToTourFusionLocation(rec: RecommendLocation) {
 
   return retVal;
 }
+
+export function getImageLink(card: TourFusionLocation) {
+  let retImage: string = "";
+
+  if (card.name.city || card.name.city !== "") {
+    if (card.elevation > 300) {
+      retImage = "/TFImages/mountain_city.jpg";
+    } else {
+      if (["Bw"].includes(card.trewarthaClassification)) {
+        retImage = "/TFImages/desert_city.jpg";
+      } else {
+        retImage = "/TFImages/city.jpg";
+      }
+    }
+  } else {
+    if (["Ft", "Fi", "E"].includes(card.trewarthaClassification)) {
+      retImage = "/TFImages/snowy.jpg";
+    } else if (["Bw"].includes(card.trewarthaClassification)) {
+      retImage = "/TFImages/desert.jpg";
+    } else if (["Cf", "Do"].includes(card.trewarthaClassification)) {
+      retImage = "/TFImages/beach.jpg";
+    } else if (["Dc", "Bs", "H"].includes(card.trewarthaClassification)) {
+      retImage = "/TFImages/boreal.jpg";
+    } else {
+      retImage = "/TFImages/jungle.jpg";
+    }
+  }
+
+  return retImage;
+}

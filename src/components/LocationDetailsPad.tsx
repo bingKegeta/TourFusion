@@ -3,6 +3,7 @@ import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
 import country from "/bestcountry.jpg";
 import { CCLocation, CCPosition, TourFusionLocation } from "../common/types";
+import { getImageLink } from "../common/extras";
 
 interface LocationDetailsProps {
   isRecommend: boolean;
@@ -42,7 +43,7 @@ export default function LocationDetailsPad({
                   text-[#FCEACB] p-4 rounded-2xl"
         >
           <img
-            src={country}
+            src={getImageLink(clickedCard)}
             alt="best"
             className="border-2 rounded-2xl border-[#BB9AF7]"
           ></img>
