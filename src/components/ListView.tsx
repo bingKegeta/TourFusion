@@ -15,6 +15,7 @@ interface ListViewProps {
   updateStateClickedCard: (card: TourFusionLocation) => void;
   updateStateClickedLoc: (loc: CCLocation) => void;
   zoomToPosition: (arg0: CCPosition) => void;
+  setReload: (args0: Boolean) => void;
   clickedCard: TourFusionLocation | null;
   clickedPos: CCPosition | null;
   clickedLoc: CCLocation | null;
@@ -26,6 +27,7 @@ export default function ListView({
   updateStateClickedCard,
   updateStateClickedLoc,
   zoomToPosition,
+  setReload,
   clickedCard,
   clickedPos,
   clickedLoc,
@@ -48,10 +50,6 @@ export default function ListView({
   }
 
   return (
-<<<<<<< HEAD
-    <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
-      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
-=======
     <div
       className="grid z-20 
                     bg-gradient-to-r 
@@ -63,8 +61,7 @@ export default function ListView({
                     h-full 
                     md:static"
     >
-      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center">
->>>>>>> e0b2c1a614899c844d1080810ba28a7203b9b2b5
+      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
         <div
           className="border-2
                           border-[#BB9AF7]
@@ -73,10 +70,11 @@ export default function ListView({
                           text-[#FCEACB]
                           w-11/12
                           sm:w-full
+                          
                           "
         >
           <div className="p-2 grid font-sans text-[#FCEACB]">
-            <ul className="flex flex-col text-2xl space-y-2">
+            <ul className="flex flex-col text-2xl space-y-2 ">
               <li className="flex justify-between pl-[10px]">
                 <span>Your Locations</span>
               </li>
@@ -96,6 +94,7 @@ export default function ListView({
                 updateStateClickedCard(card);
               }}
               item={card}
+              setReload={setReload}
               isRecommend={false}
               key={i}
             />

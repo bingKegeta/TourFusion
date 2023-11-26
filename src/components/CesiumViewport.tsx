@@ -241,6 +241,16 @@ export default function CesiumViewport({
       <div
         className="w-full h-full m-0 p-0 overflow-hidden lg:col-span-2"
         ref={divRef}
+        onClick={() => {
+          {/* Set the card to not show. That way it disappears */}
+          if (cardProps){
+            setCardProps((prev) => ({
+              ...prev,
+              show: false,
+            }));
+          }
+          }
+        }
         onDoubleClick={(e) => {
           updateStateClickedCard(null);
           getPositionOnClick(e);

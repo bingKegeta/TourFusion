@@ -16,13 +16,10 @@ export default function HomePage() {
   const [map, setMap] = useState<Viewer | null>(null);
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
   const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null); // FIX THiS !!!!!!
-  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(
-    null
-  );
+  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(null);
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
-  const [recommendedLocations, setRecommendedLocations] = useState<
-    RecommendLocation[]
-  >([]);
+  const [recommendedLocations, setRecommendedLocations] = useState<RecommendLocation[]>([]);
+  const [locationsChanged, setLocationsChanged] = useState<Boolean>(false);
   const [showList, setShowList] = useState<Boolean>(true);
   const endpoint = "http://localhost:5000/api";
 
@@ -44,10 +41,14 @@ export default function HomePage() {
     setMap(valuesToPass);
   }
 
+  function setReload(value : Boolean) {
+    setLocationsChanged(true);
+    setLocationsChanged(false);
+  }
+
   function updateListState(updateState: Boolean) {
     setShowList(updateState);
   }
-
   function zoomToPosition(position: CCPosition | null) {
     if (position) {
       map?.camera.flyTo({
@@ -67,7 +68,7 @@ export default function HomePage() {
   const queryGraphQLforUserLocations = async () => {
     const variables = {
       //! Add Session Token or OAuth logic
-      user_id: "654b12e6265eaf51c4c29b24",
+      user_id: "65586a76d592ac7d8e6d0e7f",
     };
 
     try {
@@ -97,7 +98,7 @@ export default function HomePage() {
       }
 
       console.log(returnableLocations);
-      setUserLocations([...returnableLocations]);
+      setUserLocations(returnableLocations);
       console.log(userLocations);
     } catch (err) {
       console.error(err);
@@ -107,7 +108,7 @@ export default function HomePage() {
   const queryGraphQLforRecommendedLocations = async () => {
     const variables = {
       //! Add Session Token or OAuth logic
-      user_id: "654b12e6265eaf51c4c29b24",
+      user_id: "65586a76d592ac7d8e6d0e7f",
       num_recommendations: 5,
     };
 
@@ -144,7 +145,7 @@ export default function HomePage() {
       }
 
       console.log("Recommended locations for the user:", recLocations);
-      setRecommendedLocations([...recLocations]);
+      setRecommendedLocations(recLocations);
     } catch (err) {
       console.error("Problem with the data", err);
     }
@@ -153,7 +154,7 @@ export default function HomePage() {
   useEffect(() => {
     queryGraphQLforUserLocations();
     queryGraphQLforRecommendedLocations();
-  }, []);
+  }, [locationsChanged]);
 
   const memoizedListView = useMemo(() => {
     return (
@@ -164,6 +165,7 @@ export default function HomePage() {
         clickedPos={clickedPos}
         clickedLoc={clickedLoc}
         userLocations={userLocations}
+        setReload={setReload}
         recommendedLocations={recommendedLocations}
         updateStateClickedLoc={updateStateClickedLoc}
       />
@@ -173,6 +175,7 @@ export default function HomePage() {
     updateStateClickedCard,
     updateStateClickedLoc,
     clickedCard,
+    userLocations,
     clickedLoc,
   ]);
 

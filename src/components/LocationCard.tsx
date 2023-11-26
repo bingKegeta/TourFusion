@@ -6,12 +6,14 @@ import { RecommendLocation, TourFusionLocation } from "../common/types";
 
 interface LocationCardProps {
   zoom: () => void;
+  setReload: (args0 : boolean) => void;
   isRecommend: Boolean;
   item: any; //? Putting TourFusionLocation | RecommendLocation keeps throwing weird errors
 }
 
 export default function LocationCard({
   zoom,
+  setReload,
   item,
   isRecommend,
 }: LocationCardProps) {
@@ -40,9 +42,11 @@ export default function LocationCard({
     };
 
     try {
-      await executeMutation(DELETE_LOCATION, variables);
-      handleDelete();
-      //! Add component reload here
+      await executeMutation(DELETE_LOCATION, variables).then(() => {
+        handleDelete();
+      }).finally(() => {
+        setReload(true);
+      })
     } catch (err) {
       console.error("Error deleting the entry: ", err);
     }
