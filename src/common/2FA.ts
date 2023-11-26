@@ -9,7 +9,7 @@ function makeButtonAuthenticateUser(elemBegin: HTMLElement, elemSuccess: HTMLEle
 
         // GET authentication options from the endpoint that calls
         // @simplewebauthn/server -> generateAuthenticationOptions()
-        const resp = await fetch(endpoint + '/generate-authentication-options'); // TODO
+        const resp = await fetch(endpoint + '/generate-authentication-options');
 
         let asseResp;
         try {
