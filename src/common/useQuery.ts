@@ -25,6 +25,9 @@ const useQuery = <T>(url: string): QueryHookResult<T> => {
     try {
       const response = await axios.post(url, { query: query, variables });
       const responseData: T | null = response.data.data;
+      if (response.data.errors) {
+        throw new Error(response.data.errors[0].message);
+      }
       return { data: responseData, response };
     } catch (err: any) {
       console.error("Error executing query:", err);

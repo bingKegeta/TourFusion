@@ -19,6 +19,9 @@ const useMutation = <T>(url: string): MutationHookResult<T> => {
 
     try {
       const response = await axios.post(url, { query: mutation, variables });
+      if (response.data.errors) {
+        throw new Error(response.data.errors[0].message);
+      }
       return response.data.data;
     } catch (err: any) {
       console.error("Error executing mutation:", err);
