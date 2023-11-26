@@ -97,5 +97,6 @@ function makeButtonRegisterUser(elemBegin: HTMLElement, elemSuccess: HTMLElement
 }
 
 export {
-    makeButtonAuthenticateUser as makeButtonRegisterUser,
+    makeButtonAuthenticateUser,
+    makeButtonRegisterUser
 }

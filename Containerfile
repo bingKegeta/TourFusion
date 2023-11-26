@@ -4,5 +4,5 @@ WORKDIR /app
 COPY . .
 RUN npm i
 
-EXPOSE   80
+EXPOSE 80
 CMD npx vite preview --port 80 --host
