@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
-import { DELETE_LOCATION } from "../common/mutations";
+import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
+import { RecommendLocation, TourFusionLocation } from "../common/types";
 
 interface LocationCardProps {
   zoom: () => void;
@@ -14,6 +15,11 @@ export default function LocationCard({
   item,
   isRecommend,
 }: LocationCardProps) {
+  //* Handle the case where the name is null for some reason
+  if (!isRecommend && !item.name) {
+    return <></>;
+  }
+
   const endpoint = "http://localhost:5000/api";
   const { executeMutation, loading, error } = useMutation(endpoint);
 
@@ -45,19 +51,23 @@ export default function LocationCard({
   return (
     <>
       <div
-        className="border-2
-                                                    border-[#BB9AF7]
-                                                    bg-[#3A3535]
-                                                      rounded-2xl
-                                                      font-sans
-                                                      hover:-translate-y-1 
-                                                      transition
-                                                      text-[#FCEACB] 
-                                                      duration-100
-                                                      ease-in-out
-                                                      box-border
-                                                      hover:border-[#e0af68]
-                                                      p-2"
+        className={`border-2
+                border-[#BB9AF7]
+                bg-[#3A3535]
+                  rounded-2xl
+                  font-sans
+                  hover:-translate-y-1 
+                  transition
+                  text-[#FCEACB] 
+                  duration-100
+                  ease-in-out
+                  box-border
+                  ${
+                    !isRecommend
+                      ? "hover:border-[royalblue]"
+                      : "hover:border-[darkred]"
+                  }
+                  p-2`}
       >
         <div
           onClick={zoom}
@@ -75,7 +85,10 @@ export default function LocationCard({
                           text-[#FCEACB]
                             "
         >
-          <ul className="flex flex-col text-xl space-y-2 " onClick={zoom}>
+          <ul
+            className="bg-[#1A1818] rounded-xl shadow-lg text-xl flex flex-col p-2 space-y-2 font-sans"
+            onClick={zoom}
+          >
             <li className="flex justify-between">
               <span>Average Temperature:</span>{" "}
               <span>
@@ -130,6 +143,14 @@ export default function LocationCard({
           </div>
         </div>
       </div>
+      {isRecommend && showEdit && (
+        <ConfirmPopupPrompt
+          header={`Add ${item.city}, ${item.country}?`}
+          text={`Are you sure you want to add ${item.city} to your locations?`}
+          onClose={handleEdit}
+          onConfirm={() => console.log("Here")}
+        />
+      )}
       {showDelete && (
         <ConfirmPopupPrompt
           header="Delete Location?"
