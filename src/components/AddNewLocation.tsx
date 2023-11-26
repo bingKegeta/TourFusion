@@ -30,7 +30,7 @@ export default function AddNewLocation({ clickedLoc } : any) {
                       hover:border-[#e0af68]
                       p-2"
           >
-            <img src={country} alt="best"></img>
+            {/* <img src={country} alt=""></img> */}
             <div className="text-2xl p-2">
               {clickedLoc.display}, {clickedLoc.country}
             </div>

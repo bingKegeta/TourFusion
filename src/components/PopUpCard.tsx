@@ -4,6 +4,7 @@ import { CCLocation, CCPosition } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
 import { ADD_LOCATION } from "../common/mutations";
+import { round } from "../common/extras";
 
 interface CardProps {
   x: number;
@@ -64,7 +65,7 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
           <span>{clickedLoc ? clickedLoc.country : ""}</span>
         </div>
 
-        <img className="w-full rounded-2xl p-2" src={country} alt="Location" />
+        {/* <img className="w-full rounded-2xl p-2" src={country} alt="Location" /> */}
 
         <div className="text-2xl text-left">Coordinates:</div>
 
@@ -72,13 +73,13 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
           <span className="flex justify-between">
             <span>Latitude:</span>
             <span>
-              {clickedPos ? clickedPos.latitude : "Error getting latitude"}
+              {clickedPos ? round(clickedPos.latitude, 7) : "Error getting latitude"}
             </span>
           </span>
           <span className="flex justify-between">
             <span>Longitude:</span>
             <span>
-              {clickedPos ? clickedPos.longitude : "Error getting longitude"}
+              {clickedPos ? round(clickedPos.longitude, 7) : "Error getting longitude"}
             </span>
           </span>
         </div>

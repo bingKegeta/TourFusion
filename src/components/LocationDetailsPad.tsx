@@ -44,7 +44,7 @@ export default function LocationDetailsPad({
         >
           <img
             src={getImageLink(clickedCard)}
-            alt="best"
+            alt=""
             className="border-2 rounded-2xl border-[#BB9AF7]"
           ></img>
           <div
