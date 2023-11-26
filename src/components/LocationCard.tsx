@@ -3,10 +3,11 @@ import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
 import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { RecommendLocation, TourFusionLocation } from "../common/types";
+import LocationUpdatePrompt from "./LocationUpdatePrompt";
 
 interface LocationCardProps {
   zoom: () => void;
-  setReload: (args0 : boolean) => void;
+  setReload: (args0: boolean) => void;
   isRecommend: Boolean;
   item: any; //? Putting TourFusionLocation | RecommendLocation keeps throwing weird errors
 }
@@ -42,13 +43,58 @@ export default function LocationCard({
     };
 
     try {
-      await executeMutation(DELETE_LOCATION, variables).then(() => {
-        handleDelete();
-      }).finally(() => {
-        setReload(true);
-      })
+      await executeMutation(DELETE_LOCATION, variables)
+        .then(() => {
+          handleDelete();
+        })
+        .finally(() => {
+          setReload(true);
+        });
     } catch (err) {
       console.error("Error deleting the entry: ", err);
+    }
+  };
+
+  const handleAddLocation = async () => {
+    const variables = {
+      user_id: "65586a76d592ac7d8e6d0e7f",
+      name: {
+        display: item.city,
+        country: item.country,
+      },
+      latitude: item.location.latitude,
+      longitude: item.location.longitude,
+    };
+
+    try {
+      await executeMutation(ADD_LOCATION, variables)
+        .then(() => {
+          handleEdit();
+        })
+        .finally(() => {
+          setReload(true);
+        });
+    } catch (err) {
+      console.error("Error adding the location:", err);
+    }
+  };
+
+  const displayEditOrAdd = () => {
+    if (showEdit) {
+      if (isRecommend) {
+        return (
+          <ConfirmPopupPrompt
+            header={`Add ${item.city}, ${item.country}?`}
+            text={`Are you sure you want to add ${item.city} to your locations?`}
+            onClose={handleEdit}
+            onConfirm={handleAddLocation}
+          />
+        );
+      } else {
+        return <LocationUpdatePrompt item={item} onClose={handleEdit} />;
+      }
+    } else {
+      return <></>;
     }
   };
 
@@ -126,6 +172,7 @@ export default function LocationCard({
                                      h-[40px]
                                      hover:bg-[#414868]
                                      hover:border-[#e0af68]"
+              onClick={handleEdit}
             >
               {!isRecommend ? <>&#9998;</> : <>&#65291;</>}
             </button>
@@ -148,14 +195,7 @@ export default function LocationCard({
           </div>
         </div>
       </div>
-      {isRecommend && showEdit && (
-        <ConfirmPopupPrompt
-          header={`Add ${item.city}, ${item.country}?`}
-          text={`Are you sure you want to add ${item.city} to your locations?`}
-          onClose={handleEdit}
-          onConfirm={() => console.log("Here")}
-        />
-      )}
+      {displayEditOrAdd()}
       {showDelete && (
         <ConfirmPopupPrompt
           header="Delete Location?"
