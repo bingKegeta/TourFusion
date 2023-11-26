@@ -108,7 +108,7 @@ function AuthForm({ isRegister, onClose }: FormProps) {
           </div>
         )}
         <Button
-          onClick={() => console.log(email, password)}
+          onClick={() => console.log(email)}
           text={isRegisterMode ? "Create Account" : "Login"}
           type="submit"
         />
