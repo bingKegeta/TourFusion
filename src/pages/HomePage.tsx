@@ -67,7 +67,7 @@ export default function HomePage() {
   const queryGraphQLforUserLocations = async () => {
     const variables = {
       //! Add Session Token or OAuth logic
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: "654b12e6265eaf51c4c29b24",
     };
 
     try {
@@ -106,7 +106,7 @@ export default function HomePage() {
   const queryGraphQLforRecommendedLocations = async () => {
     const variables = {
       //! Add Session Token or OAuth logic
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: "654b12e6265eaf51c4c29b24",
       num_recommendations: 5,
     };
 

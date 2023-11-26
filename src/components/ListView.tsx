@@ -31,7 +31,7 @@ export default function ListView({
 
   return (
     <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
-      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center">
+      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
         <div
           className="border-2
                           border-[#BB9AF7]

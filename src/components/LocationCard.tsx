@@ -53,6 +53,7 @@ export default function LocationCard({ zoom, item, isRecommend }: any) {
                             font-serif
                             text-lg
                             grid
+                            h-fit
                           text-[#FCEACB]
                             "
         >
