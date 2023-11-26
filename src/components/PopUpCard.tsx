@@ -45,7 +45,7 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
 
     try {
       await executeMutation(ADD_LOCATION, variables);
-
+      setShowAdd(false);
       //! Remove/Destroy the popup here (location has been added sucessfully)
       //! Also see if the list and pins refresh after addition
       console.log("Location added!");

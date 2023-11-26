@@ -3,7 +3,11 @@ export const ALL_LOCATIONS = `query Locations($user_id: String!) {
       _id
       name {
         display
+        street
+        city
         country
+        address
+        postal
       }
       location {
         latitude

@@ -36,6 +36,7 @@ export function RecommendLocationToTourFusionLocation(rec: RecommendLocation) {
 
 export function getImageLink(card: TourFusionLocation) {
   let retImage: string = "";
+  console.log(card);
   
   if (card.name.country || card.name.country !== "") {
     // Cities
@@ -51,7 +52,7 @@ export function getImageLink(card: TourFusionLocation) {
       }
     }
     // Biome
-    if (["Ft", "Fi", "E"].includes(card.trewarthaClassification)) {
+    else if (["Ft", "Fi", "E"].includes(card.trewarthaClassification)) {
       retImage = "/TFImages/snowy.jpg";
     } else if (["BW"].includes(card.trewarthaClassification)) {
       retImage = "/TFImages/desert.jpg";
