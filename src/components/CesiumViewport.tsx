@@ -28,6 +28,7 @@ export default function CesiumViewport({
   clickedLoc,
   map,
   userLocations,
+  recommendedLocations,
 }: any) {
   const divRef = useRef<HTMLDivElement>(null);
   const maxHeightVal = 1000000.0;
@@ -57,19 +58,10 @@ export default function CesiumViewport({
         "Printing userLocations inside CesiumViewport",
         userLocations
       );
-      populate(viewerInstance, userLocations); // NEW, adds the pin after having the globe
+      populate(viewerInstance, userLocations, recommendedLocations); // NEW, adds the pin after having the globe
       return () => viewerInstance?.destroy();
     }
-  }, [userLocations.length]);
-
-  // This will be moved
-  // Load in the user's recommended locations
-  useEffect(() => {
-    const getRecommendedLocations = async () => {
-      return await [];
-    };
-    getRecommendedLocations();
-  }, []);
+  }, [userLocations.length, recommendedLocations.length]);
 
   // This use effect is in charge of setting the CCLocation using the values
   // inside clickedPos. This will run when clickedPos changes..
@@ -243,18 +235,6 @@ export default function CesiumViewport({
       },
     });
   }
-
-  // useEffect(() => {
-  //   console.log(clickedPos)
-  //   if (clickedPos === null) {
-  //     getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude);
-  //   }
-  // }, [clickedPos]);
-
-  // async function handleUserClicks(e : any) {
-  //   getPositionOnClick(e);
-  //   updateStateClickedLoc(await getLocationNameByCoordinate(clickedPos?.latitude, clickedPos?.longitude));
-  // }
 
   return (
     <>

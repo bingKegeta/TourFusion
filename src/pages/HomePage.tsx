@@ -82,6 +82,7 @@ export default function HomePage() {
 
       for (let location of data.locations) {
         returnableLocations.push({
+          id: location._id,
           name: location.name,
           location: {
             latitude: location.location.latitude,
@@ -129,8 +130,8 @@ export default function HomePage() {
         recLocations.push({
           rank: recs.rank,
           location: {
-            latitude: recs.latitude,
-            longitude: recs.longitude,
+            latitude: recs.location.latitude,
+            longitude: recs.location.longitude,
             height: 0,
           },
           city: recs.city,
@@ -187,9 +188,10 @@ export default function HomePage() {
         clickedLoc={clickedLoc}
         map={map}
         userLocations={userLocations}
+        recommendedLocations={recommendedLocations}
       />
     );
-  }, [userLocations, map, clickedPos]);
+  }, [userLocations, map, clickedPos, recommendedLocations]);
 
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 h-[100svh]">
