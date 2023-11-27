@@ -3,6 +3,7 @@ import LocationCard from "./LocationCard";
 import LocationDetailsPad from "./LocationDetailsPad";
 import BackToList from "./GoBackToList";
 import AddNewLocation from "./AddNewLocation";
+import LogoutBtn from "./LogoutBtn";
 import {
   CCLocation,
   CCPosition,
@@ -12,36 +13,44 @@ import {
 import { RecommendLocationToTourFusionLocation } from "../common/extras";
 
 interface ListViewProps {
-  updateStateClickedCard: (card: TourFusionLocation) => void;
-  updateStateClickedLoc: (loc: CCLocation) => void;
+  updateStateClickedCard: (card: TourFusionLocation | null) => void;
   zoomToPosition: (arg0: CCPosition) => void;
   setReload: (args0: Boolean) => void;
   clickedCard: TourFusionLocation | null;
-  clickedPos: CCPosition | null;
-  clickedLoc: CCLocation | null;
   userLocations: TourFusionLocation[];
   recommendedLocations: RecommendLocation[];
 }
 
 export default function ListView({
   updateStateClickedCard,
-  updateStateClickedLoc,
   zoomToPosition,
   setReload,
   clickedCard,
-  clickedPos,
-  clickedLoc,
   userLocations,
   recommendedLocations,
 }: ListViewProps) {
   const maxHeight = 1000000.0;
 
+  const handleCard = () => {
+    updateStateClickedCard(null);
+  }
+
   if (clickedCard) {
     return (
       <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
         <LocationDetailsPad
+          zoom={() => {
+            zoomToPosition({
+              latitude: clickedCard.location.latitude,
+              longitude: clickedCard.location.longitude,
+              height: maxHeight,
+            });
+            updateStateClickedCard(clickedCard);
+          }}
+          setReload={setReload}
+          handleCard={handleCard}
           clickedCard={clickedCard}
-          isRecommend={clickedCard.id == "" ? false : true}
+          isRecommend={clickedCard.id == ""}
         />
         {/*This button is in charge of destroying the NewCard view, and going back to the list by setting it to null*/}
         <BackToList updateStateList={updateStateClickedCard} />
@@ -62,25 +71,27 @@ export default function ListView({
                     md:static"
     >
       <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
-        <div
-          className="border-2
-                          border-[#BB9AF7]
-                          bg-[#35373a]
-                          rounded-2xl
-                          text-[#FCEACB]
-                          w-11/12
-                          sm:w-full
-                          
-                          "
-        >
-          <div className="p-2 grid font-sans text-[#FCEACB]">
-            <ul className="flex flex-col text-2xl space-y-2 ">
-              <li className="flex justify-between pl-[10px]">
-                <span>Your Locations</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div className="
+                    text-[#FCEACB]
+                    w-11/12
+                    sm:w-full
+                    grid
+                    grid-cols-[1fr_auto]
+                    space-x-4
+                  ">
+                    <div className="p-2 font-sans grid border-2 bg-[#35373a]
+                      border-[#BB9AF7] rounded-2xl">
+                      <ul className="flex flex-col text-2xl space-y-2 ">
+                        <li className="flex justify-between pl-[10px]">
+                          <span>Your Locations</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <LogoutBtn />
+                  </div>
+
+        
 
         <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
           {userLocations.map((card, i) => (
@@ -95,6 +106,7 @@ export default function ListView({
               }}
               item={card}
               setReload={setReload}
+              handleCard={handleCard}
               isRecommend={false}
               key={i}
             />
@@ -133,6 +145,7 @@ export default function ListView({
                 );
               }}
               item={rec}
+              setReload={setReload}
               isRecommend={true}
               key={j}
             />

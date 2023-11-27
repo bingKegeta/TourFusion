@@ -4,17 +4,20 @@ import useMutation from "../common/useMutation";
 import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { RecommendLocation, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
+import { getSessionToken, round } from "../common/extras";
 
 interface LocationCardProps {
   zoom: () => void;
   setReload: (args0: boolean) => void;
   isRecommend: Boolean;
+  handleCard: () => void;
   item: any; //? Putting TourFusionLocation | RecommendLocation keeps throwing weird errors
 }
 
 export default function LocationCard({
   zoom,
   setReload,
+  handleCard,
   item,
   isRecommend,
 }: LocationCardProps) {
@@ -57,7 +60,7 @@ export default function LocationCard({
 
   const handleAddLocation = async () => {
     const variables = {
-      user_id: "65586a76d592ac7d8e6d0e7f",
+      user_id: getSessionToken(),
       name: {
         display: item.city,
         country: item.country,
@@ -91,7 +94,10 @@ export default function LocationCard({
           />
         );
       } else {
-        return <LocationUpdatePrompt item={item} onClose={handleEdit} />;
+        return <LocationUpdatePrompt item={item} 
+                                    onClose={handleEdit} 
+                                    handleCard={handleCard}
+                                    setReload={setReload}/>;
       }
     } else {
       return <></>;
@@ -143,7 +149,7 @@ export default function LocationCard({
             <li className="flex justify-between">
               <span>Average Temperature:</span>{" "}
               <span>
-                {!isRecommend ? item.averageTemperature : item.avg_temp}
+                {round((!isRecommend ? item.averageTemperature : item.avg_temp), 6)}
               </span>
             </li>
             <li className="flex justify-between">

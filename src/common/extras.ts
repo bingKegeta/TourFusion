@@ -37,7 +37,7 @@ export function RecommendLocationToTourFusionLocation(rec: RecommendLocation) {
 export function getImageLink(card: TourFusionLocation) {
   let retImage: string = "";
   console.log(card);
-  
+
   if (card.name.country || card.name.country !== "") {
     // Cities
     if (card.name.street || card.name.street !== "") {
@@ -65,9 +65,7 @@ export function getImageLink(card: TourFusionLocation) {
     } else {
       retImage = "/TFImages/jungle.jpg";
     }
-  }
-  else
-  {
+  } else {
     retImage = "/TFImages/ocean.jpg";
   }
 
@@ -77,4 +75,13 @@ export function getImageLink(card: TourFusionLocation) {
 export function round(num: number, places: number) {
   var multiplier = Math.pow(10, places);
   return Math.round(num * multiplier) / multiplier;
+}
+
+export function getSessionToken() {
+  const cookies = document.cookie.split("; ");
+  const sessionCookie = cookies.find((cookie) =>
+    cookie.startsWith("session_token=")
+  );
+
+  return sessionCookie ? sessionCookie.split("=")[1] : null;
 }
