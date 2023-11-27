@@ -1,6 +1,7 @@
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
+import config from "../config";
 
-const endpoint: string = process.env.API_URL! + '/2fa'
+const endpoint: string = config.API_URL + '/2fa'
 
 function makeButtonAuthenticateUser(elemBegin: HTMLElement, elemSuccess: HTMLElement) {
     // Start authentication when the user clicks a button
