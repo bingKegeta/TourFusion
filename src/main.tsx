@@ -4,8 +4,6 @@ import "./index.css";
 import HomePage from "./pages/HomePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
-import { AuthProvider } from "./components/AuthContext";
-import PrivateRoute from "./components/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -14,15 +12,13 @@ const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <PrivateRoute path="dashboard" element={<HomePage />} />,
+    element: <HomePage />,
   },
 ]);
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>,
   document.getElementById("root")
 );
