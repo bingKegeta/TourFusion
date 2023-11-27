@@ -44,7 +44,7 @@ function AuthForm({ isRegister, onClose }: FormProps) {
         const response = await executeMutation(REGISTER, variables);
 
         // if code reaches here, login was successful
-        const user_id = response.login;
+        const user_id = response.addUser;
         console.log(user_id);
 
         // create the cookie and set it to expire in an hour
