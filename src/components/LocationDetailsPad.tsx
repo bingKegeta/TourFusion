@@ -2,20 +2,31 @@ import React, { useState } from "react";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
 import country from "/bestcountry.jpg";
+import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { CCLocation, CCPosition, TourFusionLocation } from "../common/types";
+import LocationUpdatePrompt from "./LocationUpdatePrompt";
 import { getImageLink } from "../common/extras";
+import { getSessionToken } from "../common/extras";
 
 interface LocationDetailsProps {
+  zoom: () => void;
+  setReload: (args0: boolean) => void;
   isRecommend: boolean;
   clickedCard: TourFusionLocation;
   updateSetReload?: () => void;
 }
 
 export default function LocationDetailsPad({
+  zoom,
+  setReload,
   isRecommend,
   clickedCard,
   updateSetReload,
 }: LocationDetailsProps) {
+
+  const endpoint = "http://localhost:5000/api";
+  const { executeMutation, loading, error } = useMutation(endpoint);
+
   const [showDelete, setShowDelete] = useState<Boolean>(false);
   const [showEdit, setShowEdit] = useState<Boolean>(false);
 
@@ -25,6 +36,67 @@ export default function LocationDetailsPad({
 
   const handleEdit = () => {
     setShowEdit(!showEdit);
+  };
+
+  const handleDeleteLocation = async () => {
+    const variables = {
+      id: clickedCard.id,
+    };
+
+    try {
+      await executeMutation(DELETE_LOCATION, variables)
+        .then(() => {
+          handleDelete();
+        })
+        .finally(() => {
+          setReload(true);
+        });
+    } catch (err) {
+      console.error("Error deleting the entry: ", err);
+    }
+  };
+
+  const handleAddLocation = async () => {
+    const variables = {
+      user_id: getSessionToken(),
+      name: {
+        display: clickedCard.name.display,
+        country: clickedCard.name.country,
+      },
+      latitude: clickedCard.location.latitude,
+      longitude: clickedCard.location.longitude,
+    };
+
+    try {
+      await executeMutation(ADD_LOCATION, variables)
+        .then(() => {
+          handleEdit();
+        })
+        .finally(() => {
+          setReload(true);
+        });
+    } catch (err) {
+      console.error("Error adding the location:", err);
+    }
+  };
+
+  const displayEditOrAdd = () => {
+    if (showEdit) {
+      if (isRecommend) {
+        return (
+          <ConfirmPopupPrompt
+            header={`Add ${clickedCard.name.display}, ${clickedCard.name.country}?`}
+            text={`Are you sure you want to add ${clickedCard.name.display} to your locations?`}
+            onClose={handleEdit}
+            onConfirm={handleAddLocation}
+          />
+        );
+      } else {
+        return <LocationUpdatePrompt item={clickedCard} onClose={handleEdit} />;
+      }
+    } else {
+      return <></>;
+    }
   };
 
   return (
@@ -87,32 +159,36 @@ export default function LocationDetailsPad({
                                      h-[40px]
                                      hover:bg-[#414868]
                                      hover:border-[#e0af68]"
+                onClick={handleEdit}
               >
-                &#9998;
+                {!isRecommend ? <>&#9998;</> : <>&#65291;</>}
               </button>
-              <button
-                className="bg-[#111827] 
-                      border-2 
-                      border-[#BB9AF7] 
-                      rounded-[30px] 
-                      items-center 
-                      w-24 
-                      h-[40px]
-                      hover:bg-[#414868]
-                      hover:border-[#f7768e]"
-                onClick={handleDelete}
-              >
-                &#128465;
-              </button>
+              {!isRecommend && (
+                <button
+                  className="bg-[#111827] 
+                        border-2 
+                        border-[#BB9AF7] 
+                        rounded-[30px] 
+                        items-center 
+                        w-24 
+                        h-[40px]
+                        hover:bg-[#414868]
+                        hover:border-[#f7768e]"
+                  onClick={handleDelete}
+                >
+                  &#128465;
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
+      {displayEditOrAdd()}
       {showDelete && (
         <ConfirmPopupPrompt
           header="Delete Location?"
           text="Are you sure you want to delete this location?"
-          onConfirm={() => console.log("Yes Clicked!")}
+          onConfirm={handleDeleteLocation}
           onClose={handleDelete}
         />
       )}
