@@ -1,0 +1,51 @@
+/* UpdateLocationPrompt.css */
+
+body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .alert-container {
+    background-color: #1a1b26;
+    border: 3px solid #bb9af7;
+    border-radius: 2em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    text-align: center;
+    z-index: 1;
+  }
+  
+  h2 {
+    color: #f7768e;
+    margin-bottom: 10px;
+  }
+  
+  .main-prompt-text {
+    margin: 0;
+    color: #ff9e64;
+  }
+  
+  .buttons {
+    display: flex;
+    margin-top: 10%;
+    justify-content: space-between;
+  }
+
+  .btn-container {
+    flex: 1;
+  }
+
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(10px);
+  }

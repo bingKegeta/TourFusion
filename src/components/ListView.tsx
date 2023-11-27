@@ -1,147 +1,157 @@
-import React , { useEffect, useState } from "react";
-import Button from "./Button";
-import { CCPosition, CCLocation, TourFusionLocation } from "../common/types";
+import React, { useEffect, useState } from "react";
 import LocationCard from "./LocationCard";
 import LocationDetailsPad from "./LocationDetailsPad";
-import "../styles/ListView.css"
+import BackToList from "./GoBackToList";
+import AddNewLocation from "./AddNewLocation";
+import LogoutBtn from "./LogoutBtn";
+import {
+  CCLocation,
+  CCPosition,
+  RecommendLocation,
+  TourFusionLocation,
+} from "../common/types";
+import { RecommendLocationToTourFusionLocation } from "../common/extras";
 
-export default function ListView({updateStateClickedLoc, zoomToPosition, clickedLoc} : any) {
-    const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
-    const endpoint = 'http://localhost:5000/api';
-    const [recommendedLocations, setRecommendedLocations] = useState<TourFusionLocation[]>([]);
-    
-    useEffect(() => {
-      queryGraphQLforUserLocations()
-    }, [])
-    
-    const queryGraphQLforUserLocations = async () => {
-      let addLocationQuery = JSON.stringify({
-        query: `query {
-          locations(user_id: "653bfedf1e7c5a2367365f16") {
-            name {
-              display
-              street
-              city
-              country
-              address
-              postal
-            }
-            location {
-              latitude
-              longitude
-            }
-            elevation
-            avg_temp
-            trewartha
-            climate_zone
-          }
-        }`
-      });
-  
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: addLocationQuery,
-      });
-      const data = await response.json();
-      const returnableLocations: TourFusionLocation[] = [];
-  
-      console.log(data.data.locations);
-  
-      for (let location of data.data.locations) {
-        {/*let nameData = await getLocationNameByCoordinate(
-                             location.location.latitude, 
-        location.location.longitude);*/}
-        returnableLocations.push({
-            name : location.name,
-            location: { 
-                        latitude: location.location.latitude, 
-                        longitude: location.location.longitude, 
-                        height: 0.0
-                      },
-            averageTemperature: location.avg_temp,
-            elevation: location.elevation,
-            trewarthaClassification: location.trewartha,
-            climateZone: location.climate_zone,
-          }
-        )}
-      
-      console.log(returnableLocations);
-      setUserLocations(returnableLocations);
-    }
-  
+interface ListViewProps {
+  updateStateClickedCard: (card: TourFusionLocation | null) => void;
+  zoomToPosition: (arg0: CCPosition) => void;
+  setReload: (args0: Boolean) => void;
+  clickedCard: TourFusionLocation | null;
+  userLocations: TourFusionLocation[];
+  recommendedLocations: RecommendLocation[];
+}
 
-    {/*Make this not dependable of the useState from its parent component*/}
-    // const mapRecommendedLocationsToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
-    //   return (
-    //     <div key={tfc.name} className=""
-        
-    //     onClick={async () => {zoomToPosition({latitude: tfc.location.latitude, longitude: tfc.location.longitude, height: 1000000.0}); setClickedLoc(await getLocationNameByCoordinate(tfc.location.latitude, tfc.location.longitude));}}>
-    //       <div className="user-location-container-title">
-    //         {tfc.name}
-    //       </div>
-    //       <div className="user-location-container-details">
-    //         Average Temperature: {tfc.averageTemperature}<br/>
-    //         Elevation: {tfc.elevation}<br/>
-    //         Climate: {tfc.climateZone}<br/>
-    //         Trewartha Classification: {tfc.trewarthaClassification}<br/>
-    //       </div>
-    //     </div>
-    //   );
-    // }
-  
-    // const mapClickedLocationToListBox = (tfc: TourFusionLocation): React.JSX.Element => {
-    //   return (
-    //     <div key={tfc.location.longitude} className="clicked-location-container">
-    //       <div className="clicked-location-container-title">
-    //         {tfc.name.city}, {tfc.name.country}
-    //       </div>
-    //       <div className="clicked-location-container-image">
-    //         <img src="/src/assets/TourFusionLocationPics/shanghai.jpg" width="100%" alt=""/>
-    //       </div>
-    //       <div className="clicked-location-container-info">
-    //         TODO: ~~~SOME DESCRIPTION HERE~~~<br/>
-    //         Average Temperature: {tfc.averageTemperature}<br/>
-    //         Elevation: {tfc.elevation}<br/>
-    //         Climate: {tfc.climateZone}<br/>
-    //         Trewartha Classification: {tfc.trewarthaClassification} TODO: map to some more readable description<br/>
-    //       </div>
-    //       <div className="clicked-location-container-buttons">
-    //         <Button text="Edit" onClick={() => console.log("here")}/>
-    //         <Button text="Remove" onClick={() => console.log("here2")}/>
-    //       </div>
-    //     </div>
-    //   );
-    // }
+export default function ListView({
+  updateStateClickedCard,
+  zoomToPosition,
+  setReload,
+  clickedCard,
+  userLocations,
+  recommendedLocations,
+}: ListViewProps) {
+  const maxHeight = 1000000.0;
 
-    const cards = (userLocations as TourFusionLocation[]).map((tfc) => {
-      return <LocationCard onClick={() => {zoomToPosition({latitude: tfc.location.latitude, longitude: tfc.location.longitude, height: 1000000.0}); updateStateClickedLoc(tfc.name);}}
-                           tfc={tfc} />
-    });
+  const handleCard = () => {
+    updateStateClickedCard(null);
+  }
 
+  if (clickedCard) {
     return (
-        <div className="grid z-20 bg-gray-900 text-white">
-            
-            <div className="box-border p-4 m-4">
-              <div className={clickedLoc === null ? "all-user-locations-show" : "all-user-locations-hide"}>
-                <div className="all-user-locations-title">
-                {/* <div className="text-2xl"> */}
-                  Your Locations
-                </div>
-
-                <ul>{cards}</ul>
-
-                <div className="recommended-locations-title">
-                  Recommended for You
-                </div>
-                {/*(recommendedLocations as TourFusionLocation[]).map(tfc)*/}
-              </div>
-            </div>
-            <div className={clickedLoc !== null ? "single-location-show" : "single-location-hide"}>
-              <LocationDetailsPad clickedLoc={clickedLoc}/>
-            </div>
-          </div>  
+      <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
+        <LocationDetailsPad
+          zoom={() => {
+            zoomToPosition({
+              latitude: clickedCard.location.latitude,
+              longitude: clickedCard.location.longitude,
+              height: maxHeight,
+            });
+            updateStateClickedCard(clickedCard);
+          }}
+          setReload={setReload}
+          handleCard={handleCard}
+          clickedCard={clickedCard}
+          isRecommend={clickedCard.id == ""}
+        />
+        {/*This button is in charge of destroying the NewCard view, and going back to the list by setting it to null*/}
+        <BackToList updateStateList={updateStateClickedCard} />
+      </div>
     );
+  }
+
+  return (
+    <div
+      className="grid z-20 
+                    bg-gradient-to-r 
+                    from-[#8f5e15] via-[#5a4a78] to-[#f7768e] animate-gradient-x 
+                    text-white 
+                    absolute 
+                    overflow-y-auto 
+                    w-full 
+                    h-full 
+                    md:static"
+    >
+      <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
+      <div className="
+                    text-[#FCEACB]
+                    w-11/12
+                    sm:w-full
+                    grid
+                    grid-cols-[1fr_auto]
+                    space-x-4
+                  ">
+                    <div className="p-2 font-sans grid border-2 bg-[#35373a]
+                      border-[#BB9AF7] rounded-2xl">
+                      <ul className="flex flex-col text-2xl space-y-2 ">
+                        <li className="flex justify-between pl-[10px]">
+                          <span>Your Locations</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <LogoutBtn />
+                  </div>
+
+        
+
+        <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
+          {userLocations.map((card, i) => (
+            <LocationCard
+              zoom={() => {
+                zoomToPosition({
+                  latitude: card.location.latitude,
+                  longitude: card.location.longitude,
+                  height: maxHeight,
+                });
+                updateStateClickedCard(card);
+              }}
+              item={card}
+              setReload={setReload}
+              handleCard={handleCard}
+              isRecommend={false}
+              key={i}
+            />
+          ))}
+        </div>
+        <div
+          className="border-2
+                          border-[#BB9AF7]
+                          bg-[#3A3535]
+                          rounded-2xl
+                          text-[#FCEACB]
+                          w-11/12
+                          sm:w-full
+                          "
+        >
+          <div className="p-2 grid font-sans text-[#FCEACB]">
+            <ul className="flex flex-col text-2xl space-y-2">
+              <li className="flex justify-between pl-[10px]">
+                <span>Recommended for You</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
+          {recommendedLocations.map((rec, j) => (
+            <LocationCard
+              zoom={() => {
+                zoomToPosition({
+                  latitude: rec.location.latitude,
+                  longitude: rec.location.longitude,
+                  height: maxHeight,
+                });
+                updateStateClickedCard(
+                  RecommendLocationToTourFusionLocation(rec)
+                );
+              }}
+              item={rec}
+              setReload={setReload}
+              isRecommend={true}
+              key={j}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
