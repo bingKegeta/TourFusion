@@ -4,6 +4,7 @@ import "./index.css";
 import HomePage from "./pages/HomePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
+import ProtectWrapper from "./components/ProtectWrapper";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <HomePage />,
+    element: <ProtectWrapper child={<HomePage />} />,
   },
 ]);
 
