@@ -8,6 +8,7 @@ import { LOGIN, REGISTER } from "../common/mutations";
 import HomePage from "../pages/HomePage";
 import LoadingPage from "../pages/LoadingPage";
 import ErrorPage from "../pages/ErrorPage";
+import { useAuth } from "./AuthContext";
 
 type FormProps = {
   isRegister: boolean;
@@ -26,6 +27,7 @@ function AuthForm({ isRegister, onClose }: FormProps) {
   //! This isn't being recognized in the .env for some reason
   const endpoint = "http://localhost:5000/api";
 
+  const { isAuthenticated, login, logout } = useAuth();
   const { executeMutation, loading, error } = useMutation(endpoint);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +54,9 @@ function AuthForm({ isRegister, onClose }: FormProps) {
           new Date().getTime() + 3600 * 1000
         }`;
 
+        // set the login context to be true, i.e. the user has successfully logged in
+        login();
+        // go to the dashboard
         navigate("/dashboard");
       } catch (err) {
         console.error("Error registering user:", err);
@@ -76,6 +81,8 @@ function AuthForm({ isRegister, onClose }: FormProps) {
           new Date().getTime() + 3600 * 1000
         }`;
 
+        // set the login context to the true, i.e. the user has logged in
+        login();
         // go to the dashboard
         navigate("/dashboard");
       } catch (err) {
