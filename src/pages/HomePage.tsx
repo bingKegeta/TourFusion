@@ -12,6 +12,7 @@ import ShowListBtn from "../components/ShowListBtn";
 import useQuery from "../common/useQuery";
 import { ALL_LOCATIONS, RECOMMENDED_LOCATIONS } from "../common/queries";
 import { getSessionToken } from "../common/extras";
+import config from "../config";
 
 export default function HomePage() {
   const [map, setMap] = useState<Viewer | null>(null);
@@ -26,7 +27,7 @@ export default function HomePage() {
   >([]);
   const [locationsChanged, setLocationsChanged] = useState<Boolean>(false);
   const [showList, setShowList] = useState<Boolean>(true);
-  const endpoint = "http://localhost:5000/api";
+  const endpoint = config.API_URL + "/api";
 
   const { executeQuery, loading, error } = useQuery(endpoint);
 

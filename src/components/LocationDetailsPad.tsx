@@ -7,6 +7,7 @@ import { CCLocation, CCPosition, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
 import { getImageLink } from "../common/extras";
 import { getSessionToken } from "../common/extras";
+import config from "../config";
 
 interface LocationDetailsProps {
   zoom: () => void;
@@ -26,7 +27,7 @@ export default function LocationDetailsPad({
   updateSetReload,
 }: LocationDetailsProps) {
 
-  const endpoint = "http://localhost:5000/api";
+  const endpoint = config.API_URL + "/api";
   const { executeMutation, loading, error } = useMutation(endpoint);
 
   const [showDelete, setShowDelete] = useState<Boolean>(false);
