@@ -40,8 +40,17 @@ export default function ListView({
     return (
       <div className="grid z-20 bg-gray-900 text-white absolute overflow-y-auto w-full h-full md:static">
         <LocationDetailsPad
+          zoom={() => {
+            zoomToPosition({
+              latitude: clickedCard.location.latitude,
+              longitude: clickedCard.location.longitude,
+              height: maxHeight,
+            });
+            updateStateClickedCard(clickedCard);
+          }}
+          setReload={setReload}
           clickedCard={clickedCard}
-          isRecommend={clickedCard.id == "" ? false : true}
+          isRecommend={clickedCard.id == ""}
         />
         {/*This button is in charge of destroying the NewCard view, and going back to the list by setting it to null*/}
         <BackToList updateStateList={updateStateClickedCard} />
@@ -133,6 +142,7 @@ export default function ListView({
                 );
               }}
               item={rec}
+              setReload={setReload}
               isRecommend={true}
               key={j}
             />

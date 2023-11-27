@@ -4,7 +4,7 @@ import useMutation from "../common/useMutation";
 import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { RecommendLocation, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
-import { getSessionToken } from "../common/extras";
+import { getSessionToken, round } from "../common/extras";
 
 interface LocationCardProps {
   zoom: () => void;
@@ -144,7 +144,7 @@ export default function LocationCard({
             <li className="flex justify-between">
               <span>Average Temperature:</span>{" "}
               <span>
-                {!isRecommend ? item.averageTemperature : item.avg_temp}
+                {round((!isRecommend ? item.averageTemperature : item.avg_temp), 6)}
               </span>
             </li>
             <li className="flex justify-between">
