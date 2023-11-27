@@ -10,12 +10,14 @@ interface LocationCardProps {
   zoom: () => void;
   setReload: (args0: boolean) => void;
   isRecommend: Boolean;
+  handleCard: () => void;
   item: any; //? Putting TourFusionLocation | RecommendLocation keeps throwing weird errors
 }
 
 export default function LocationCard({
   zoom,
   setReload,
+  handleCard,
   item,
   isRecommend,
 }: LocationCardProps) {
@@ -92,7 +94,10 @@ export default function LocationCard({
           />
         );
       } else {
-        return <LocationUpdatePrompt item={item} onClose={handleEdit} />;
+        return <LocationUpdatePrompt item={item} 
+                                    onClose={handleEdit} 
+                                    handleCard={handleCard}
+                                    setReload={setReload}/>;
       }
     } else {
       return <></>;

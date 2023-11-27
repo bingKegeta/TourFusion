@@ -9,9 +9,11 @@ import { UPDATE_LOCATION } from "../common/mutations";
 interface UpdateProps {
   onClose: () => void;
   item: TourFusionLocation;
+  setReload: (args0: boolean) => void;
+  handleCard: () => void;
 }
 
-const LocationUpdatePrompt = ({ onClose, item }: UpdateProps) => {
+const LocationUpdatePrompt = ({ onClose, item, setReload, handleCard }: UpdateProps) => {
   const [name, setName] = useState<string>("");
 
   const { executeMutation, loading, error } = useMutation(
@@ -32,8 +34,14 @@ const LocationUpdatePrompt = ({ onClose, item }: UpdateProps) => {
     };
 
     try {
-      await executeMutation(UPDATE_LOCATION, variables);
-      onClose();
+      await executeMutation(UPDATE_LOCATION, variables)
+        .then(() => {
+          setReload(true);
+        }).then(() => {
+          handleCard();
+        }).finally(() => {
+          console.log("asd");
+        })
     } catch (err) {
       console.error("Error updating the location name: ", err);
     }

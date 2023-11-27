@@ -13,6 +13,7 @@ interface LocationDetailsProps {
   setReload: (args0: boolean) => void;
   isRecommend: boolean;
   clickedCard: TourFusionLocation;
+  handleCard: () => void;
   updateSetReload?: () => void;
 }
 
@@ -21,6 +22,7 @@ export default function LocationDetailsPad({
   setReload,
   isRecommend,
   clickedCard,
+  handleCard,
   updateSetReload,
 }: LocationDetailsProps) {
 
@@ -47,15 +49,17 @@ export default function LocationDetailsPad({
       await executeMutation(DELETE_LOCATION, variables)
         .then(() => {
           handleDelete();
-        })
-        .finally(() => {
+        }).then(() => {
           setReload(true);
+        }).finally(() => {
+          handleCard();
         });
     } catch (err) {
       console.error("Error deleting the entry: ", err);
     }
   };
 
+  
   const handleAddLocation = async () => {
     const variables = {
       user_id: getSessionToken(),
@@ -71,9 +75,10 @@ export default function LocationDetailsPad({
       await executeMutation(ADD_LOCATION, variables)
         .then(() => {
           handleEdit();
-        })
-        .finally(() => {
+        }).then(() => {
           setReload(true);
+        }).finally(() => {
+          handleCard();
         });
     } catch (err) {
       console.error("Error adding the location:", err);
@@ -92,7 +97,9 @@ export default function LocationDetailsPad({
           />
         );
       } else {
-        return <LocationUpdatePrompt item={clickedCard} onClose={handleEdit} />;
+        return <LocationUpdatePrompt item={clickedCard} onClose={handleEdit} 
+                                     handleCard={handleCard} setReload={setReload}
+        />;
       }
     } else {
       return <></>;

@@ -38,7 +38,7 @@ export default function HomePage() {
     setClickedLoc(valuesToPass);
   }
 
-  function updateStateClickedCard(valuesToPass: TourFusionLocation) {
+  function updateStateClickedCard(valuesToPass: TourFusionLocation | null) {
     setClickedCard(valuesToPass);
   }
 
@@ -177,21 +177,15 @@ export default function HomePage() {
         zoomToPosition={zoomToPosition}
         updateStateClickedCard={updateStateClickedCard}
         clickedCard={clickedCard}
-        clickedPos={clickedPos}
-        clickedLoc={clickedLoc}
         userLocations={userLocations}
         setReload={setReload}
         recommendedLocations={recommendedLocations.filter(inUserLocations)}
-        updateStateClickedLoc={updateStateClickedLoc}
       />
     );
   }, [
     zoomToPosition,
     updateStateClickedCard,
-    updateStateClickedLoc,
-    clickedCard,
     userLocations,
-    clickedLoc,
   ]);
 
   const memoizedCesiumViewport = useMemo(() => {
