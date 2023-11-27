@@ -6,3 +6,4 @@ dist-ssr
 
 .env
 src/pages/Testing.tsx
+src/config.ts

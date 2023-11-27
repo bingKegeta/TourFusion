@@ -8,6 +8,8 @@ import { LOGIN, REGISTER } from "../common/mutations";
 import HomePage from "../pages/HomePage";
 import LoadingPage from "../pages/LoadingPage";
 import ErrorPage from "../pages/ErrorPage";
+import { makeButtonAuthenticateOrRegisterUser } from "../common/2FA"
+import config from "../config";
 
 type FormProps = {
   isRegister: boolean;
@@ -24,7 +26,7 @@ function AuthForm({ isRegister, onClose }: FormProps) {
   const navigate = useNavigate();
 
   //! This isn't being recognized in the .env for some reason
-  const endpoint = "http://localhost:5000/api";
+  const endpoint = config.API_URL + "/api";
 
   const { executeMutation, loading, error } = useMutation(endpoint);
 
@@ -46,6 +48,12 @@ function AuthForm({ isRegister, onClose }: FormProps) {
         // if code reaches here, login was successful
         const user_id = response.addUser;
         console.log(user_id);
+
+        const res = await makeButtonAuthenticateOrRegisterUser(isRegister, user_id);
+        console.log(res)
+        if (!res) {
+          throw error;
+        }
 
         // create the cookie and set it to expire in an hour
         document.cookie = `session_token=${user_id}; path=/; expires=${
@@ -70,6 +78,12 @@ function AuthForm({ isRegister, onClose }: FormProps) {
         // if code reaches here, login was successful
         const user_id = response.login;
         console.log(user_id);
+
+        const res = await makeButtonAuthenticateOrRegisterUser(isRegister, user_id);
+        console.log(res)
+        if (!res) {
+          throw error;
+        }
 
         // create the cookie and set it to expire in an hour
         document.cookie = `session_token=${user_id}; path=/; expires=${

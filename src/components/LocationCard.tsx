@@ -5,6 +5,7 @@ import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { RecommendLocation, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
 import { getSessionToken, round } from "../common/extras";
+import config from "../config";
 
 interface LocationCardProps {
   zoom: () => void;
@@ -26,7 +27,7 @@ export default function LocationCard({
     return <></>;
   }
 
-  const endpoint = "http://localhost:5000/api";
+  const endpoint = config.API_URL + "/api";
   const { executeMutation, loading, error } = useMutation(endpoint);
 
   const [showDelete, setShowDelete] = useState<Boolean>(false);
