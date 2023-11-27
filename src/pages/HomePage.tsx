@@ -156,11 +156,21 @@ export default function HomePage() {
     }
   };
 
+  function inUserLocations(recommendLocation: RecommendLocation, index: number, array: RecommendLocation[]) {
+    let flag = true;
+    userLocations.forEach(userLocation => {
+      if (userLocation.name.display === recommendLocation.city && userLocation.name.country === recommendLocation.country) {
+        flag = false;
+      }
+    });
+    return flag;
+  }
+
   useEffect(() => {
     queryGraphQLforUserLocations();
     queryGraphQLforRecommendedLocations();
   }, [locationsChanged]);
-
+  
   const memoizedListView = useMemo(() => {
     return (
       <ListView
@@ -171,7 +181,7 @@ export default function HomePage() {
         clickedLoc={clickedLoc}
         userLocations={userLocations}
         setReload={setReload}
-        recommendedLocations={recommendedLocations}
+        recommendedLocations={recommendedLocations.filter(inUserLocations)}
         updateStateClickedLoc={updateStateClickedLoc}
       />
     );
@@ -196,7 +206,7 @@ export default function HomePage() {
         clickedLoc={clickedLoc}
         map={map}
         userLocations={userLocations}
-        recommendedLocations={recommendedLocations}
+        recommendedLocations={recommendedLocations.filter(inUserLocations)}
       />
     );
   }, [userLocations, map, clickedPos, recommendedLocations]);
