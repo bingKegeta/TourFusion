@@ -41,7 +41,17 @@ function AuthForm({ isRegister, onClose }: FormProps) {
       };
 
       try {
-        await executeMutation(REGISTER, variables);
+        const response = await executeMutation(REGISTER, variables);
+
+        // if code reaches here, login was successful
+        const user_id = response.login;
+        console.log(user_id);
+
+        // create the cookie and set it to expire in an hour
+        document.cookie = `session_token=${user_id}; path=/; expires=${
+          new Date().getTime() + 3600 * 1000
+        }`;
+
         navigate("/dashboard");
       } catch (err) {
         console.error("Error registering user:", err);
@@ -61,7 +71,10 @@ function AuthForm({ isRegister, onClose }: FormProps) {
         const user_id = response.login;
         console.log(user_id);
 
-        document.cookie = `session_token=${user_id}; path=/;`;
+        // create the cookie and set it to expire in an hour
+        document.cookie = `session_token=${user_id}; path=/; expires=${
+          new Date().getTime() + 3600 * 1000
+        }`;
 
         // go to the dashboard
         navigate("/dashboard");
