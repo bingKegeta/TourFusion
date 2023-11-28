@@ -70,7 +70,8 @@ export default function ListView({
                     overflow-y-auto 
                     w-full 
                     h-full 
-                    md:static"
+                    md:static
+                    "
     >
       <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
       <div className="
@@ -134,7 +135,7 @@ export default function ListView({
           </div>
         </div>
 
-        <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
+        <div className="space-y-4 w-11/12 pt-3 pb-3">
           {recommendedLocations.map((rec, j) => (
             <LocationCard
               zoom={() => {
