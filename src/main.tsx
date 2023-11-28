@@ -5,11 +5,12 @@ import HomePage from "./pages/HomePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import ProtectWrapper from "./components/ProtectWrapper";
+import HeroPage from "./pages/HeroPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />,
+    element: <HeroPage />,
   },
   {
     path: "dashboard",

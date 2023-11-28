@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Navigator, BrowserRouter } from "react-router-dom";
 import Button from "./Button";
 import Input from "./Input";
@@ -13,9 +13,10 @@ import { endpoint } from "../common/extras";
 type FormProps = {
   isRegister: boolean;
   onClose: () => void;
+  visible: boolean;
 };
 
-function AuthForm({ isRegister, onClose }: FormProps) {
+function AuthForm({ isRegister, onClose, visible }: FormProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,8 +24,6 @@ function AuthForm({ isRegister, onClose }: FormProps) {
   const [isRegisterMode, setIsRegisterMode] = useState(isRegister);
 
   const navigate = useNavigate();
-
-  //! This isn't being recognized in the .env for some reason
 
   const { executeMutation, loading, error } = useMutation(endpoint);
 
@@ -84,71 +83,86 @@ function AuthForm({ isRegister, onClose }: FormProps) {
     }
   };
 
+  useEffect(() => {
+    if (visible) {
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    }
+  }, [visible]);
+
   return (
     <>
-      <div className="auth-form-container">
-        <button onClick={onClose} className="close-btn">
-          &times;
-        </button>
-        <h2>{isRegisterMode ? "Register" : "Login"}</h2>
-        <form onSubmit={handleSubmit} className="form-container">
-          <div className="inp-container">
-            {isRegisterMode && (
-              <Input
-                labelText="Username"
-                type="username"
-                placeholder="username"
-                value={username}
-                onChange={setUsername}
-              />
-            )}
-            <Input
-              labelText={isRegisterMode ? "Email" : "Email or Username"}
-              type={isRegisterMode ? "email" : "username"}
-              placeholder="example@email.com"
-              value={email}
-              onChange={setEmail}
-            />
-          </div>
-          <div className="inp-container">
-            <Input
-              labelText="Password"
-              type="password"
-              placeholder="**********"
-              value={password}
-              onChange={setPassword}
-            />
-          </div>
-          {isRegisterMode && (
+      <div
+        className={`auth-form-overlay ${visible ? "visible" : ""}`}
+        onClick={onClose}
+      ></div>
+      <div className="auth-form-back">
+        <div className={`auth-form-container ${visible ? "visible" : ""}`}>
+          <button onClick={onClose} className="close-btn">
+            &times;
+          </button>
+          <h2>{isRegisterMode ? "Register" : "Login"}</h2>
+          <form onSubmit={handleSubmit} className="form-container">
             <div className="inp-container">
+              {isRegisterMode && (
+                <Input
+                  labelText="Username"
+                  type="username"
+                  placeholder="username"
+                  value={username}
+                  onChange={setUsername}
+                />
+              )}
               <Input
-                labelText="Confirm Password"
-                type="password"
-                placeholder="**********"
-                value={confirmPassword}
-                onChange={setConfirmPassword}
+                labelText={isRegisterMode ? "Email" : "Email or Username"}
+                type={isRegisterMode ? "email" : "username"}
+                placeholder="example@email.com"
+                value={email}
+                onChange={setEmail}
               />
             </div>
-          )}
-          <Button
-            onClick={() => console.log(email)}
-            text={isRegisterMode ? "Create Account" : "Login"}
-            type="submit"
-          />
-          <div></div>
-        </form>
-        <button
-          onClick={() =>
-            setIsRegisterMode((prevIsRegisterMode) => !prevIsRegisterMode)
-          }
-          className="toggle-button"
-        >
-          {isRegisterMode
-            ? "Already have an account? Click Here!"
-            : "Don't have an account yet? Click Here!"}
-        </button>
-        {loading && <LoadingPage />}
-        {error && <ErrorPage message={error.message} />}
+            <div className="inp-container">
+              <Input
+                labelText="Password"
+                type="password"
+                placeholder="**********"
+                value={password}
+                onChange={setPassword}
+              />
+            </div>
+            {isRegisterMode && (
+              <div className="inp-container">
+                <Input
+                  labelText="Confirm Password"
+                  type="password"
+                  placeholder="**********"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                />
+              </div>
+            )}
+            <Button
+              onClick={() => console.log(email)}
+              text={isRegisterMode ? "Create Account" : "Login"}
+              type="submit"
+            />
+            <div></div>
+          </form>
+          <button
+            onClick={() =>
+              setIsRegisterMode((prevIsRegisterMode) => !prevIsRegisterMode)
+            }
+            className="toggle-button"
+          >
+            {isRegisterMode
+              ? "Already have an account? Click Here!"
+              : "Don't have an account yet? Click Here!"}
+          </button>
+          {loading && <LoadingPage />}
+          {error && <ErrorPage message={error.message} />}
+        </div>
       </div>
     </>
   );
