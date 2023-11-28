@@ -2,7 +2,8 @@ import React from "react";
 
 const LoadingPage: React.FC = () => {
   return (
-    <div className="absolute flex flex-col items-center justify-center h-full bg-gray-900 text-white w-full">
+    <div className="flex flex-col h-full w-full z-50 opacity-80 justify-items-center
+              absolute items-center justify-center bg-gray-900 text-white">
       {/* <div className="animate-spin rounded-full border-t-4 border-white h-16 w-16 mb-4"></div>
       <h2 className="text-lg">Loading...</h2> */}
       <img src="/loading.gif" alt="loading..." />

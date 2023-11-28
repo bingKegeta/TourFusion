@@ -22,7 +22,7 @@ function AuthForm({ isRegister, onClose, visible }: FormProps) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegisterMode, setIsRegisterMode] = useState(isRegister);
-
+  const better = true;
   const navigate = useNavigate();
 
   const { executeMutation, loading, error } = useMutation(endpoint);
@@ -91,11 +91,17 @@ function AuthForm({ isRegister, onClose, visible }: FormProps) {
       setConfirmPassword("");
     }
   }, [visible]);
+  
+
+  if (loading) {
+    return (
+      <LoadingPage />
+    )
+  }
 
   return (
     <>
-      <div
-        className={`auth-form-overlay ${visible ? "visible" : ""}`}
+      <div className={`auth-form-overlay ${visible ? "visible" : ""}`}
         onClick={onClose}
       ></div>
       <div className="auth-form-back">
@@ -160,7 +166,6 @@ function AuthForm({ isRegister, onClose, visible }: FormProps) {
               ? "Already have an account? Click Here!"
               : "Don't have an account yet? Click Here!"}
           </button>
-          {loading && <LoadingPage />}
           {error && <ErrorPage message={error.message} />}
         </div>
       </div>
