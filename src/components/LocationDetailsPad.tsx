@@ -5,7 +5,7 @@ import country from "/bestcountry.jpg";
 import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { CCLocation, CCPosition, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
-import { getImageLink } from "../common/extras";
+import { endpoint, getImageLink } from "../common/extras";
 import { getSessionToken } from "../common/extras";
 
 interface LocationDetailsProps {
@@ -25,8 +25,6 @@ export default function LocationDetailsPad({
   handleCard,
   updateSetReload,
 }: LocationDetailsProps) {
-
-  const endpoint = "http://localhost:5000/api";
   const { executeMutation, loading, error } = useMutation(endpoint);
 
   const [showDelete, setShowDelete] = useState<Boolean>(false);
@@ -49,9 +47,11 @@ export default function LocationDetailsPad({
       await executeMutation(DELETE_LOCATION, variables)
         .then(() => {
           handleDelete();
-        }).then(() => {
+        })
+        .then(() => {
           setReload(true);
-        }).finally(() => {
+        })
+        .finally(() => {
           handleCard();
         });
     } catch (err) {
@@ -59,7 +59,6 @@ export default function LocationDetailsPad({
     }
   };
 
-  
   const handleAddLocation = async () => {
     const variables = {
       user_id: getSessionToken(),
@@ -75,9 +74,11 @@ export default function LocationDetailsPad({
       await executeMutation(ADD_LOCATION, variables)
         .then(() => {
           handleEdit();
-        }).then(() => {
+        })
+        .then(() => {
           setReload(true);
-        }).finally(() => {
+        })
+        .finally(() => {
           handleCard();
         });
     } catch (err) {
@@ -97,9 +98,14 @@ export default function LocationDetailsPad({
           />
         );
       } else {
-        return <LocationUpdatePrompt item={clickedCard} onClose={handleEdit} 
-                                     handleCard={handleCard} setReload={setReload}
-        />;
+        return (
+          <LocationUpdatePrompt
+            item={clickedCard}
+            onClose={handleEdit}
+            handleCard={handleCard}
+            setReload={setReload}
+          />
+        );
       }
     } else {
       return <></>;

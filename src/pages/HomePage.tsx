@@ -11,7 +11,7 @@ import ListView from "../components/ListView";
 import ShowListBtn from "../components/ShowListBtn";
 import useQuery from "../common/useQuery";
 import { ALL_LOCATIONS, RECOMMENDED_LOCATIONS } from "../common/queries";
-import { getSessionToken } from "../common/extras";
+import { endpoint, getSessionToken } from "../common/extras";
 import LoadingScreen from "../components/LoadingScreen";
 import LoadingPage from "./LoadingPage";
 
@@ -27,7 +27,6 @@ export default function HomePage() {
   >([]);
   const [locationsChanged, setLocationsChanged] = useState<Boolean>(false);
   const [showList, setShowList] = useState<Boolean>(true);
-  const endpoint = "http://localhost:5000/api";
 
   const { executeQuery, loading, error } = useQuery(endpoint);
 
@@ -161,10 +160,17 @@ export default function HomePage() {
     }
   };
 
-  function inUserLocations(recommendLocation: RecommendLocation, index: number, array: RecommendLocation[]) {
+  function inUserLocations(
+    recommendLocation: RecommendLocation,
+    index: number,
+    array: RecommendLocation[]
+  ) {
     let flag = true;
-    userLocations.forEach(userLocation => {
-      if (userLocation.name.display === recommendLocation.city && userLocation.name.country === recommendLocation.country) {
+    userLocations.forEach((userLocation) => {
+      if (
+        userLocation.name.display === recommendLocation.city &&
+        userLocation.name.country === recommendLocation.country
+      ) {
         flag = false;
       }
     });
@@ -175,7 +181,7 @@ export default function HomePage() {
     queryGraphQLforUserLocations();
     queryGraphQLforRecommendedLocations();
   }, [locationsChanged]);
-  
+
   const memoizedListView = useMemo(() => {
     return (
       <ListView
@@ -188,11 +194,7 @@ export default function HomePage() {
         recommendedLocations={recommendedLocations.filter(inUserLocations)}
       />
     );
-  }, [
-    zoomToPosition,
-    updateStateClickedCard,
-    userLocations,
-  ]);
+  }, [zoomToPosition, updateStateClickedCard, userLocations]);
 
   const memoizedCesiumViewport = useMemo(() => {
     return (

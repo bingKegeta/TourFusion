@@ -8,6 +8,7 @@ import { LOGIN, REGISTER } from "../common/mutations";
 import HomePage from "../pages/HomePage";
 import LoadingPage from "../pages/LoadingPage";
 import ErrorPage from "../pages/ErrorPage";
+import { endpoint } from "../common/extras";
 
 type FormProps = {
   isRegister: boolean;
@@ -24,7 +25,6 @@ function AuthForm({ isRegister, onClose }: FormProps) {
   const navigate = useNavigate();
 
   //! This isn't being recognized in the .env for some reason
-  const endpoint = "http://localhost:5000/api";
 
   const { executeMutation, loading, error } = useMutation(endpoint);
 

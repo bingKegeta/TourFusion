@@ -5,6 +5,7 @@ import "../styles/LocationUpdatePrompt.css";
 import useMutation from "../common/useMutation";
 import { TourFusionLocation } from "../common/types";
 import { UPDATE_LOCATION } from "../common/mutations";
+import { endpoint } from "../common/extras";
 
 interface UpdateProps {
   onClose: () => void;
@@ -13,12 +14,15 @@ interface UpdateProps {
   handleCard: () => void;
 }
 
-const LocationUpdatePrompt = ({ onClose, item, setReload, handleCard }: UpdateProps) => {
+const LocationUpdatePrompt = ({
+  onClose,
+  item,
+  setReload,
+  handleCard,
+}: UpdateProps) => {
   const [name, setName] = useState<string>("");
 
-  const { executeMutation, loading, error } = useMutation(
-    "http://localhost:5000/api"
-  );
+  const { executeMutation, loading, error } = useMutation(endpoint);
 
   const onConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +37,7 @@ const LocationUpdatePrompt = ({ onClose, item, setReload, handleCard }: UpdatePr
       },
     };
 
-    try {
+     try {
       await executeMutation(UPDATE_LOCATION, variables)
         .then(() => {
           setReload();
