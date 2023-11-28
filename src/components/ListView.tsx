@@ -15,7 +15,8 @@ import { RecommendLocationToTourFusionLocation } from "../common/extras";
 interface ListViewProps {
   updateStateClickedCard: (card: TourFusionLocation | null) => void;
   zoomToPosition: (arg0: CCPosition) => void;
-  setReload: (args0: Boolean) => void;
+  showLoadingPage: (arg0 : Boolean) => void;
+  setReload: () => void;
   clickedCard: TourFusionLocation | null;
   userLocations: TourFusionLocation[];
   recommendedLocations: RecommendLocation[];
@@ -25,6 +26,7 @@ export default function ListView({
   updateStateClickedCard,
   zoomToPosition,
   setReload,
+  showLoadingPage,
   clickedCard,
   userLocations,
   recommendedLocations,
@@ -68,7 +70,8 @@ export default function ListView({
                     overflow-y-auto 
                     w-full 
                     h-full 
-                    md:static"
+                    md:static
+                    "
     >
       <div className="box-border md:p-4 md:m-4 mt-4 grid justify-items-center h-fit">
       <div className="
@@ -106,6 +109,7 @@ export default function ListView({
               }}
               item={card}
               setReload={setReload}
+              showLoadingPage={showLoadingPage}
               handleCard={handleCard}
               isRecommend={false}
               key={i}
@@ -131,7 +135,7 @@ export default function ListView({
           </div>
         </div>
 
-        <div className="space-y-4 w-11/12 sm:w-full pt-3 pb-3">
+        <div className="space-y-4 w-11/12 pt-3 pb-3">
           {recommendedLocations.map((rec, j) => (
             <LocationCard
               zoom={() => {
@@ -146,6 +150,7 @@ export default function ListView({
               }}
               item={rec}
               setReload={setReload}
+              showLoadingPage={showLoadingPage}
               isRecommend={true}
               key={j}
             />

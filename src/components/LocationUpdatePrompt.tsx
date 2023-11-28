@@ -10,7 +10,7 @@ import { endpoint } from "../common/extras";
 interface UpdateProps {
   onClose: () => void;
   item: TourFusionLocation;
-  setReload: (args0: boolean) => void;
+  setReload: () => void;
   handleCard: () => void;
 }
 
@@ -37,17 +37,13 @@ const LocationUpdatePrompt = ({
       },
     };
 
-    try {
+     try {
       await executeMutation(UPDATE_LOCATION, variables)
         .then(() => {
-          setReload(true);
-        })
-        .then(() => {
+          setReload();
+        }).finally(() => {
           handleCard();
         })
-        .finally(() => {
-          console.log("asd");
-        });
     } catch (err) {
       console.error("Error updating the location name: ", err);
     }

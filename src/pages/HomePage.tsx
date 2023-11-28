@@ -12,15 +12,16 @@ import ShowListBtn from "../components/ShowListBtn";
 import useQuery from "../common/useQuery";
 import { ALL_LOCATIONS, RECOMMENDED_LOCATIONS } from "../common/queries";
 import { endpoint, getSessionToken } from "../common/extras";
+import LoadingScreen from "../components/LoadingScreen";
+import LoadingPage from "./LoadingPage";
 
 export default function HomePage() {
   const [map, setMap] = useState<Viewer | null>(null);
   const [clickedPos, setClickedPos] = useState<CCPosition | null>(null);
-  const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null); // FIX THiS !!!!!!
-  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(
-    null
-  );
+  const [clickedLoc, setClickedLoc] = useState<CCLocation | null>(null);
+  const [clickedCard, setClickedCard] = useState<TourFusionLocation | null>(null);
   const [userLocations, setUserLocations] = useState<TourFusionLocation[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [recommendedLocations, setRecommendedLocations] = useState<
     RecommendLocation[]
   >([]);
@@ -45,7 +46,11 @@ export default function HomePage() {
     setMap(valuesToPass);
   }
 
-  function setReload(value: Boolean) {
+  function showLoadingPage(valuesToPass : Boolean) {
+    setIsLoading(valuesToPass);
+  }
+
+  function setReload() {
     setLocationsChanged(true);
     setLocationsChanged(false);
   }
@@ -185,6 +190,7 @@ export default function HomePage() {
         clickedCard={clickedCard}
         userLocations={userLocations}
         setReload={setReload}
+        showLoadingPage={showLoadingPage}
         recommendedLocations={recommendedLocations.filter(inUserLocations)}
       />
     );
@@ -200,12 +206,20 @@ export default function HomePage() {
         zoomToPosition={zoomToPosition}
         clickedPos={clickedPos}
         clickedLoc={clickedLoc}
+        setReload={setReload}
         map={map}
+        showLoadingPage={showLoadingPage}
         userLocations={userLocations}
         recommendedLocations={recommendedLocations.filter(inUserLocations)}
       />
     );
   }, [userLocations, map, clickedPos, recommendedLocations]);
+
+  if (isLoading) {
+    return (
+      <LoadingScreen />
+    )
+  }
 
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 h-[100svh]">
