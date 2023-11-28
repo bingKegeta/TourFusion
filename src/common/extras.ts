@@ -85,3 +85,5 @@ export function getSessionToken() {
 
   return sessionCookie ? sessionCookie.split("=")[1] : null;
 }
+
+export const endpoint = "http://api.tour-fusion.com/api";

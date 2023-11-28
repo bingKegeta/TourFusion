@@ -4,7 +4,7 @@ import useMutation from "../common/useMutation";
 import { ADD_LOCATION, DELETE_LOCATION } from "../common/mutations";
 import { RecommendLocation, TourFusionLocation } from "../common/types";
 import LocationUpdatePrompt from "./LocationUpdatePrompt";
-import { getSessionToken, round } from "../common/extras";
+import { endpoint, getSessionToken, round } from "../common/extras";
 
 interface LocationCardProps {
   zoom: () => void;
@@ -26,7 +26,6 @@ export default function LocationCard({
     return <></>;
   }
 
-  const endpoint = "http://localhost:5000/api";
   const { executeMutation, loading, error } = useMutation(endpoint);
 
   const [showDelete, setShowDelete] = useState<Boolean>(false);
@@ -94,10 +93,14 @@ export default function LocationCard({
           />
         );
       } else {
-        return <LocationUpdatePrompt item={item} 
-                                    onClose={handleEdit} 
-                                    handleCard={handleCard}
-                                    setReload={setReload}/>;
+        return (
+          <LocationUpdatePrompt
+            item={item}
+            onClose={handleEdit}
+            handleCard={handleCard}
+            setReload={setReload}
+          />
+        );
       }
     } else {
       return <></>;
@@ -149,7 +152,10 @@ export default function LocationCard({
             <li className="flex justify-between">
               <span>Average Temperature:</span>{" "}
               <span>
-                {round((!isRecommend ? item.averageTemperature : item.avg_temp), 6)}
+                {round(
+                  !isRecommend ? item.averageTemperature : item.avg_temp,
+                  6
+                )}
               </span>
             </li>
             <li className="flex justify-between">

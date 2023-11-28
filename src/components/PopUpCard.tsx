@@ -4,7 +4,7 @@ import { CCLocation, CCPosition } from "../common/types";
 import ConfirmPopupPrompt from "./ConfirmPopupPrompt";
 import useMutation from "../common/useMutation";
 import { ADD_LOCATION } from "../common/mutations";
-import { getSessionToken, round } from "../common/extras";
+import { endpoint, getSessionToken, round } from "../common/extras";
 
 interface CardProps {
   x: number;
@@ -31,7 +31,7 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
   };
 
   // Code to add location into the db
-  const endpoint = "http://localhost:5000/api";
+
   const { executeMutation, loading, error } = useMutation(endpoint);
 
   const handleAddLocation = async () => {
