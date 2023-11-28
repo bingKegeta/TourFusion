@@ -15,7 +15,8 @@ import { RecommendLocationToTourFusionLocation } from "../common/extras";
 interface ListViewProps {
   updateStateClickedCard: (card: TourFusionLocation | null) => void;
   zoomToPosition: (arg0: CCPosition) => void;
-  setReload: (args0: Boolean) => void;
+  showLoadingPage: (arg0 : Boolean) => void;
+  setReload: () => void;
   clickedCard: TourFusionLocation | null;
   userLocations: TourFusionLocation[];
   recommendedLocations: RecommendLocation[];
@@ -25,6 +26,7 @@ export default function ListView({
   updateStateClickedCard,
   zoomToPosition,
   setReload,
+  showLoadingPage,
   clickedCard,
   userLocations,
   recommendedLocations,
@@ -106,6 +108,7 @@ export default function ListView({
               }}
               item={card}
               setReload={setReload}
+              showLoadingPage={showLoadingPage}
               handleCard={handleCard}
               isRecommend={false}
               key={i}
@@ -146,6 +149,7 @@ export default function ListView({
               }}
               item={rec}
               setReload={setReload}
+              showLoadingPage={showLoadingPage}
               isRecommend={true}
               key={j}
             />

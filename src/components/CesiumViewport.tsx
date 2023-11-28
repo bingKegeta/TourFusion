@@ -25,9 +25,9 @@ export default function CesiumViewport({
   updateStateClickedCard,
   zoomToPosition,
   clickedPos,
-  clickedLoc,
   map,
   userLocations,
+  showLoadingPage,
   recommendedLocations,
 }: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -262,6 +262,7 @@ export default function CesiumViewport({
           y={cardProps.y}
           clickedPos={cardProps.valuesCCPosition}
           clickedLoc={cardProps.valuesCCLocation}
+          showLoadingPage={showLoadingPage}
         />
       )}
     </>

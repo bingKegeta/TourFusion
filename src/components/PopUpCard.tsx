@@ -11,19 +11,16 @@ interface CardProps {
   y: number;
   clickedPos: CCPosition | null;
   clickedLoc: CCLocation | null;
+  showLoadingPage: (arg0 : Boolean) => void;
 }
 
-export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
+export default function PopUpCard({ x, y, clickedPos, clickedLoc, showLoadingPage }: CardProps) {
   const startOnPoint = {
     position: "absolute",
     left: `${x}px`,
     top: `${y}px`,
   };
-  {
-    /*<div className=" " style={style}>
 
-    </div>*/
-  }
   const [showAdd, setShowAdd] = useState<Boolean>(false);
 
   const handle = () => {
@@ -34,7 +31,10 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
   const endpoint = "http://localhost:5000/api";
   const { executeMutation, loading, error } = useMutation(endpoint);
 
+  
   const handleAddLocation = async () => {
+    showLoadingPage(true);
+
     const variables = {
       //! Add session token logic to get this
       user_id: getSessionToken(),
@@ -44,8 +44,19 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
     };
 
     try {
-      await executeMutation(ADD_LOCATION, variables);
-      setShowAdd(false);
+      await executeMutation(ADD_LOCATION, variables)
+      .then(() => {
+        setShowAdd(false)
+      }).then(() => {
+        // The reason this is different from the previous ways of reloading
+        // is because this affects the cesium component and the pins in a way
+        // that is more intrusive
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 10);
+      })
+      
       //! Remove/Destroy the popup here (location has been added sucessfully)
       //! Also see if the list and pins refresh after addition
       console.log("Location added!");
@@ -110,8 +121,8 @@ export default function PopUpCard({ x, y, clickedPos, clickedLoc }: CardProps) {
         <ConfirmPopupPrompt
           header={`Add ${clickedLoc?.display}, ${clickedLoc?.country}?`}
           text={`Are you sure you want to add ${clickedLoc?.display}, ${clickedLoc?.country}?`}
-          onConfirm={handleAddLocation}
           onClose={handle}
+          onConfirm={handleAddLocation}
         />
       )}
     </>

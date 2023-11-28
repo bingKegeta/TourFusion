@@ -8,7 +8,8 @@ import { getSessionToken, round } from "../common/extras";
 
 interface LocationCardProps {
   zoom: () => void;
-  setReload: (args0: boolean) => void;
+  setReload: () => void;
+  showLoadingPage: (arg0: Boolean) => void; 
   isRecommend: Boolean;
   handleCard: () => void;
   item: any; //? Putting TourFusionLocation | RecommendLocation keeps throwing weird errors
@@ -18,6 +19,7 @@ export default function LocationCard({
   zoom,
   setReload,
   handleCard,
+  showLoadingPage,
   item,
   isRecommend,
 }: LocationCardProps) {
@@ -51,7 +53,7 @@ export default function LocationCard({
           handleDelete();
         })
         .finally(() => {
-          setReload(true);
+          window.location.reload();
         });
     } catch (err) {
       console.error("Error deleting the entry: ", err);
@@ -59,6 +61,7 @@ export default function LocationCard({
   };
 
   const handleAddLocation = async () => {
+    showLoadingPage(true);
     const variables = {
       user_id: getSessionToken(),
       name: {
@@ -75,7 +78,8 @@ export default function LocationCard({
           handleEdit();
         })
         .finally(() => {
-          setReload(true);
+          setReload();
+          showLoadingPage(false);
         });
     } catch (err) {
       console.error("Error adding the location:", err);

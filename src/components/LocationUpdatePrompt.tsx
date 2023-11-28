@@ -9,7 +9,7 @@ import { UPDATE_LOCATION } from "../common/mutations";
 interface UpdateProps {
   onClose: () => void;
   item: TourFusionLocation;
-  setReload: (args0: boolean) => void;
+  setReload: () => void;
   handleCard: () => void;
 }
 
@@ -36,11 +36,9 @@ const LocationUpdatePrompt = ({ onClose, item, setReload, handleCard }: UpdatePr
     try {
       await executeMutation(UPDATE_LOCATION, variables)
         .then(() => {
-          setReload(true);
-        }).then(() => {
-          handleCard();
+          setReload();
         }).finally(() => {
-          console.log("asd");
+          handleCard();
         })
     } catch (err) {
       console.error("Error updating the location name: ", err);
